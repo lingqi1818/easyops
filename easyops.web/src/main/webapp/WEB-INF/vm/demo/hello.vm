@@ -1,0 +1,17 @@
+<html>
+<head>
+<title>Spring4 MVC -HelloWorld</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /> 
+</head>
+<body>
+<h1>Hello : ${name}</h1>
+<br/>
+<h2>test post function:<h2><br/>
+你是哪位?<br/>
+
+<form action="post" method="post">
+<input type="text" name="p1" size="100"/><br/>
+<input type="submit" value="submit"/><input type="reset" value="reset"/>
+</form>
+</body>
+</html>

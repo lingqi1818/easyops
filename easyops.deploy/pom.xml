@@ -1,0 +1,106 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+ <parent>
+ <groupId>easyops.all</groupId>
+ <version>0.1</version>
+ <artifactId>easyops.all</artifactId>
+ <relativePath>../pom.xml</relativePath>
+</parent>
+  <groupId>easyops.deploy</groupId>
+  <artifactId>easyops.deploy</artifactId>
+  <packaging>jar</packaging>
+  <version>0.1</version>
+  <name>easyops.deploy</name>
+<dependencies>
+<dependency>
+  <groupId>easyops.common</groupId>
+  <artifactId>easyops.common</artifactId>
+  <version>${pom.version}</version>
+</dependency>
+</dependencies>
+  <build>
+   <filters> 
+      <filter>${basedir}/../application.properties</filter> 
+    </filters> 
+	<resources>
+	<resource>
+        <directory>bin</directory>
+        <includes>
+          <include>**/*.sh</include>
+        </includes>
+        <filtering>true</filtering>
+        <targetPath>bin</targetPath>
+      </resource>
+      <resource>
+        <directory>conf</directory>
+        <includes>
+          <include>**/*.*</include>
+        </includes>
+        <filtering>true</filtering>
+        <targetPath>conf</targetPath>
+      </resource>
+      <resource>
+        <directory>webapp</directory>
+        <includes>
+          <include>**/*.*</include>
+        </includes>
+        <filtering>true</filtering>
+        <targetPath>webapp</targetPath>
+      </resource>
+      <resource>
+        <directory>static</directory>
+        <includes>
+          <include>**/*.*</include>
+        </includes>
+        <filtering>false</filtering>
+        <targetPath>static</targetPath>
+      </resource>
+      <resource>
+        <directory>src/main/java</directory>
+        <includes>
+          <include>**/*.xml</include>
+          <include>**/*.properties</include>
+        </includes>
+      </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+        <includes>
+          <include>**/*.xml</include>
+          <include>**/*.properties</include>
+        </includes>
+      </resource>
+    </resources>
+	<finalName>easyops.deploy-${pom.version}</finalName>
+	<plugins>
+      <plugin> 
+   <artifactId>maven-antrun-plugin</artifactId>  
+     <executions>     
+        <execution>       
+             <phase>install</phase>      
+                   <goals>          
+                         <goal>run</goal>      
+                   </goals>           
+                   <configuration>     
+                         <tasks>
+                         <taskdef name="autoconf" classname="com.dumpcache.tools.AutoConfigTask" classpath="${basedir}/libs/dumpcache.common-0.1.jar"/>
+                             <autoconf classpath="${basedir}/libs"
+                             srcFile="${basedir}/../easyops.deploy/target/classes/conf/nginx/nginx.conf"
+                             toFile="${basedir}/../easyops.deploy/target/classes/conf/nginx/nginx.conf"
+                             />
+                             <copy tofile="${basedir}/target/classes/webapp/easyops.war" overwrite="true">
+                                    <fileset file="${basedir}/../easyops.web/target/easyops.web-0.1.war"/>
+                             </copy>
+                             <tar destfile="${basedir}/../easyops.deploy/target/easyops-${pom.version}.tgz" compression="gzip">
+            					<fileset dir="${basedir}/target/classes/">
+                				<include name="**/*.*"/>
+            					</fileset>
+        					</tar>
+                         </tasks>   
+                   </configuration>      
+        </execution>  
+     </executions>
+</plugin> 
+    </plugins> 
+  </build>
+</project>

@@ -1,0 +1,9 @@
+<html>
+<head>
+<title>Spring4 MVC -HelloWorld</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+</head>
+<body>
+<h1>Hello : ${p1}</h1>
+</body>
+</html>
