@@ -1,0 +1,10 @@
+{
+	"statusCode":"${statusCode}",
+	"message":"${msg}",
+	"navTabId":"",
+	"rel":"",
+	"callbackType":"",
+	"forwardUrl":"",
+	"confirmMsg":""
+}
+

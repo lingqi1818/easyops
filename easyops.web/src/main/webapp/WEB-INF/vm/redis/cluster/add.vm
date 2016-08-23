@@ -1,0 +1,20 @@
+<div class="pageContent">
+	<form method="post" action="redis/cluster/create" class="pageForm required-validate" onsubmit="return validateCallback(this, dialogAjaxDone);">
+		<div class="pageFormContent" layoutH="56">
+			<p>
+				<label>集群名称：</label>
+				<input name="clusterName" class="required" type="text" size="30" value="" alt="请输入集群名称"/>
+			</p>
+			<p>
+				<label>添加Redis节点：</label>
+				<textarea name="clusterNodes" rows="3" class="required" cols="50" >单个节点格式为“ip:port”，需要添加多个则中间用“，”号隔开,新集群节点必须大于等于3个。</textarea>
+			</p>
+		</div>
+		<div class="formBar">
+			<ul>
+				<li><div class="buttonActive"><div class="buttonContent"><button type="submit">提交</button></div></div></li>
+				<li><div class="button"><div class="buttonContent"><button type="button" class="close">取消</button></div></div></li>
+			</ul>
+		</div>
+	</form>
+</div>

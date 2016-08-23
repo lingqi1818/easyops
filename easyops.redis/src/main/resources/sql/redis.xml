@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dumpcache.easyops.redis.dal.mapper.RedisMapper">
+    <resultMap id="BaseResultMap" type="com.dumpcache.easyops.redis.dal.entity.RedisCluster">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="cluster_name" property="clusterName" jdbcType="VARCHAR" />
+        <result column="master_nodes" property="masterNodes" jdbcType="VARCHAR" />
+        <result column="slave_nodes" property="slaveNodes" jdbcType="VARCHAR" />
+        <result column="gmt_created" property="gmtCreated" jdbcType="TIMESTAMP" />
+        <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
+    </resultMap>
+    
+    <select id="getAllRedisClusters" resultMap="BaseResultMap">
+        select id,cluster_name,master_nodes,slave_nodes,gmt_created,gmt_modified from eo_redis_cluster
+    </select>
+    
+    <insert id="insertRedisCluster" parameterType="com.dumpcache.easyops.redis.dal.entity.RedisCluster">
+    	insert into eo_redis_cluster(cluster_name,master_nodes,slave_nodes,gmt_created,gmt_modified)
+    	values(#{clusterName},#{masterNodes},#{slaveNodes},now(),now())
+    </insert>
+    
+    <update id="updateRedisCluster" parameterType="com.dumpcache.easyops.redis.dal.entity.RedisCluster">
+    	update eo_redis_cluster set cluster_name = #{clusterName},master_nodes = #{masterNodes},
+    	slave_node=#{slaveNodes},gmt_modified=now()
+    	where id=#{id}
+    </update>
+    
+</mapper>

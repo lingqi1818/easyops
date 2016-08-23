@@ -1,0 +1,54 @@
+<div class="pageHeader">
+	
+</div>
+<div class="pageContent">
+	<div class="panelBar">
+		<ul class="toolBar">
+			<li><a class="add" href="redis/cluster/list" target="navTab" rel="main"><span>刷新</span></a></li>
+			<li><a class="add" href="redis/cluster/add" target="dialog" rel="main"><span>添加</span></a></li>
+			<li><a class="delete" href="demo/common/ajaxDone.html?uid={sid_user}" target="ajaxTodo" title="确定要删除吗?"><span>删除</span></a></li>
+			<li><a class="edit" href="demo_page4.html?uid={sid_user}" target="navTab"><span>修改</span></a></li>
+			<li class="line">line</li>
+			<li><a class="icon" href="demo/common/dwz-team.xls" target="dwzExport" targetType="navTab" title="实要导出这些记录吗?"><span>导出EXCEL</span></a></li>
+		</ul>
+	</div>
+	<table class="table" width="100%" layoutH="138">
+		<thead>
+			<tr>
+				<th width="120">集群名称</th>
+				<th width="120">节点数量</th>
+				<th width="120">集群状态</th>
+				<th width="80">添加日期</th>
+				<th width="80">修改日期</th>
+				<th width="80">操作</th>
+			</tr>
+		</thead>
+		<tbody>		
+			#foreach($cluster in $clusters)
+			<tr target="sid_user" rel="6">
+				<td>${cluster.clusterName}</td>
+				<td>3</td>
+				<td>OK</td>
+				<td>2016-08-18</td>
+				<td>2016-08-18</td>
+				<td><a class="button" href="redis/cluster/info" target="navTab" rel="main" title="集群信息"><span>查看</span></a></td>
+			</tr>
+			#end
+		</tbody>
+	</table>
+	<!--<div class="panelBar">
+		<div class="pages">
+			<span>显示</span>
+			<select class="combox" name="numPerPage" onchange="navTabPageBreak({numPerPage:this.value})">
+				<option value="20">20</option>
+				<option value="50">50</option>
+				<option value="100">100</option>
+				<option value="200">200</option>
+			</select>
+			<span>条，共${totalCount}条</span>
+		</div>
+
+		<div class="pagination" targetType="navTab" totalCount="200" numPerPage="20" pageNumShown="10" currentPage="1"></div>
+	
+	</div>-->
+</div>

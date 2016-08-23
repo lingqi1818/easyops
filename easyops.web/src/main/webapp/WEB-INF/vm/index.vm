@@ -140,12 +140,7 @@ $(function(){
 							</li>
 							<li><a href="#">中间件管理</a>
 								<ul>
-									<li><a href="manager/memory" target="navTab" rel="main">Redis</a>
-									<ul>
-										<li><a href="manager/memory" target="navTab" rel="main">集群管理</a></li>
-										<li><a href="manager/memory" target="navTab" rel="main">集群监控</a></li>
-									</ul>
-									</li>
+									<li><a href="redis/cluster/list" target="navTab" rel="main">Redis集群管理</a></li>
 								</ul>
 							</li>
 						</ul>
