@@ -1,0 +1,28 @@
+<div class="pageContent">
+	<form method="post" action="redis/cluster/slave/create?clusterId=${clusterId}" class="pageForm required-validate" onsubmit="return validateCallback(this, dialogAjaxDone);">
+		<div class="pageFormContent" layoutH="56">
+			<p>
+				<label>挂载的masterHost：</label>
+				<input name="masterHost" class="required" type="text" size="30" value="" alt="请输入masterHost"/>
+			</p>
+			<p>
+				<label>挂载的masterPort：</label>
+				<input name="masterPort" class="required" type="text" size="30" value="" alt="请输入masterPort"/>
+			</p>
+			<p>
+				<label>挂载的slaveHost：</label>
+				<input name="slaveHost" class="required" type="text" size="30" value="" alt="请输入slaveHost"/>
+			</p>
+			<p>
+				<label>挂载的slavePort：</label>
+				<input name="slavePort" class="required" type="text" size="30" value="" alt="请输入slavePort"/>
+			</p>
+		</div>
+		<div class="formBar">
+			<ul>
+				<li><div class="buttonActive"><div class="buttonContent"><button type="submit">提交</button></div></div></li>
+				<li><div class="button"><div class="buttonContent"><button type="button" class="close">取消</button></div></div></li>
+			</ul>
+		</div>
+	</form>
+</div>

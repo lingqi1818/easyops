@@ -7,11 +7,13 @@ import com.dumpcache.easyops.redis.dal.entity.RedisCluster;
 public interface RedisMapper {
 
     public void insertRedisCluster(RedisCluster rc);
-    
+
     public void updateRedisCluster(RedisCluster rc);
 
     public List<RedisCluster> getAllRedisClusters();
 
-    public int getgetAllRedisClustersCount();
+    public int getAllRedisClustersCount();
+
+    public RedisCluster getRedisClusterById(int id);
 
 }

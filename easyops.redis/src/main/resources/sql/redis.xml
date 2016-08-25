@@ -3,25 +3,32 @@
 <mapper namespace="com.dumpcache.easyops.redis.dal.mapper.RedisMapper">
     <resultMap id="BaseResultMap" type="com.dumpcache.easyops.redis.dal.entity.RedisCluster">
         <id column="id" property="id" jdbcType="INTEGER"/>
+        <id column="migrate_process" property="migrateProcess" jdbcType="INTEGER"/>
         <result column="cluster_name" property="clusterName" jdbcType="VARCHAR" />
         <result column="master_nodes" property="masterNodes" jdbcType="VARCHAR" />
         <result column="slave_nodes" property="slaveNodes" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="VARCHAR" />
         <result column="gmt_created" property="gmtCreated" jdbcType="TIMESTAMP" />
         <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
     </resultMap>
     
     <select id="getAllRedisClusters" resultMap="BaseResultMap">
-        select id,cluster_name,master_nodes,slave_nodes,gmt_created,gmt_modified from eo_redis_cluster
+        select id,cluster_name,master_nodes,slave_nodes,status,migrate_process,gmt_created,gmt_modified from eo_redis_cluster
+    </select>
+    
+    <select id="getRedisClusterById" resultMap="BaseResultMap">
+        select id,cluster_name,master_nodes,slave_nodes,status,migrate_process,gmt_created,gmt_modified from eo_redis_cluster
+        where id = #{id}
     </select>
     
     <insert id="insertRedisCluster" parameterType="com.dumpcache.easyops.redis.dal.entity.RedisCluster">
-    	insert into eo_redis_cluster(cluster_name,master_nodes,slave_nodes,gmt_created,gmt_modified)
-    	values(#{clusterName},#{masterNodes},#{slaveNodes},now(),now())
+    	insert into eo_redis_cluster(cluster_name,master_nodes,slave_nodes,status,migrate_process,gmt_created,gmt_modified)
+    	values(#{clusterName},#{masterNodes},#{slaveNodes},'NORMAL',0,now(),now())
     </insert>
     
     <update id="updateRedisCluster" parameterType="com.dumpcache.easyops.redis.dal.entity.RedisCluster">
     	update eo_redis_cluster set cluster_name = #{clusterName},master_nodes = #{masterNodes},
-    	slave_node=#{slaveNodes},gmt_modified=now()
+    	slave_node=#{slaveNodes},status=#{status},migrate_process=#{migrateProcess},gmt_modified=now()
     	where id=#{id}
     </update>
     

@@ -11,10 +11,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.dumpcache.easyops.redis.dal.entity.RedisCluster;
 import com.dumpcache.easyops.redis.service.RedisClusterManager;
+import com.dumpcache.easyops.redis.service.RedisClusterManager.RedisClusterInfo;
 import com.dumpcache.easyops.redis.service.RedisClusterManager.RedisClusterNode;
+import com.dumpcache.easyops.redis.util.Utils;
 
 /**
  * Redis管理控制台
@@ -40,10 +43,86 @@ public class RedisController {
     public String addCluster() {
         return "redis/cluster/add";
     }
-    
+
+    @RequestMapping("/redis/cluster/slave/add")
+    public String addSlave(@RequestParam(value = "clusterId") int clusterId, Model model) {
+        model.addAttribute("clusterId", clusterId);
+        return "redis/cluster/slave/add";
+    }
+
+    @RequestMapping("/redis/cluster/master/add")
+    public String addMaster(@RequestParam(value = "clusterId") int clusterId, Model model) {
+        model.addAttribute("clusterId", clusterId);
+        return "redis/cluster/master/add";
+    }
+
+    @RequestMapping("/redis/cluster/slave/create")
+    public String addSlave(@RequestParam(value = "masterHost") String masterHost,
+                           @RequestParam(value = "masterPort") int masterPort,
+                           @RequestParam(value = "slaveHost") String slaveHost,
+                           @RequestParam(value = "slavePort") int slavePort,
+                           @RequestParam(value = "clusterId") int clusterId, Model model) {
+        RedisClusterNode master = new RedisClusterNode(masterHost, masterPort);
+        RedisClusterNode slave = new RedisClusterNode(slaveHost, slavePort);
+        try {
+            redisClusterManager.addSlaveToMaster(clusterId, master, slave);
+            model.addAttribute("statusCode", 200);
+            model.addAttribute("msg", "添加slave节点成功！");
+            return "error";
+        } catch (Exception ex) {
+            model.addAttribute("statusCode", 300);
+            model.addAttribute("msg", "添加slave节点失败，系统内部错误！");
+            return "error";
+        }
+    }
+
+    @RequestMapping("/redis/cluster/master/create")
+    public String addMaster(@RequestParam(value = "masterHost") String masterHost,
+                            @RequestParam(value = "masterPort") int masterPort,
+                            @RequestParam(value = "clusterId") int clusterId, Model model) {
+        RedisClusterNode master = new RedisClusterNode(masterHost, masterPort);
+        try {
+            redisClusterManager.addNodesToCluster(clusterId, master);
+            model.addAttribute("statusCode", 200);
+            model.addAttribute("msg", "添加master节点成功！");
+            return "error";
+        } catch (Exception ex) {
+            model.addAttribute("statusCode", 300);
+            model.addAttribute("msg", "添加master节点失败，系统内部错误！");
+            return "error";
+        }
+    }
+
     @RequestMapping("/redis/cluster/info")
-    public String infoCluster() {
+    public String infoCluster(@RequestParam(value = "clusterId") int clusterId, Model model) {
+        model.addAttribute("clusterId", clusterId);
         return "redis/cluster/info";
+    }
+
+    @RequestMapping("/redis/cluster/migrate")
+    public String migrate(@RequestParam(value = "clusterId") int clusterId, Model model) {
+        model.addAttribute("clusterId", clusterId);
+        return "redis/cluster/migrate";
+    }
+
+    @RequestMapping("/redis/cluster/doMigrate")
+    public @ResponseBody String doMigrate(@RequestParam(value = "clusterId") int clusterId,
+                                          @RequestParam(value = "startSlot") int startSlot,
+                                          @RequestParam(value = "endSlot") int endSlot,
+                                          @RequestParam(value = "srcIp") String srcIp,
+                                          @RequestParam(value = "srcPort") int srcPort,
+                                          @RequestParam(value = "destIp") String destIp,
+                                          @RequestParam(value = "destPort") int destPort) {
+        RedisClusterNode src = new RedisClusterNode(srcIp, srcPort);
+        RedisClusterNode dest = new RedisClusterNode(destIp, destPort);
+        redisClusterManager.migrateSlots(clusterId, Utils.formatToSlotsArray(startSlot, endSlot),
+                src, dest);
+        return "success";
+    }
+
+    @RequestMapping("/redis/cluster/getInfo")
+    public @ResponseBody RedisClusterInfo getClusterInfo(@RequestParam(value = "clusterId") int clusterId) {
+        return redisClusterManager.infoCluster(clusterId);
     }
 
     @RequestMapping("/redis/cluster/create")

@@ -33,67 +33,51 @@ public interface RedisClusterManager {
     /**
      * 遣散集群
      * 
-     * @param namespace
-     * @param appName
-     * @param clusterName
+     * @param clusterId
      */
-    public void dismissRedisCluster(String namespace, String appName, String clusterName);
+    public void dismissRedisCluster(int clusterId);
 
     /**
      * 添加节点到集群
      * 
-     * @param namespace
-     * @param appName
-     * @param clusterName
+     * @param clusterId
      * @param nodes
      */
-    public void addNodesToCluster(String namespace, String appName, String clusterName,
-                                  RedisClusterNode... nodes);
+    public void addNodesToCluster(int clusterId, RedisClusterNode... nodes);
 
     /**
      * 从集群删除节点
      * 
-     * @param namespace
-     * @param appName
-     * @param clusterName
+     * @param clusterId
      * @param nodes
      */
-    public void delNodesFromCluster(String namespace, String appName, String clusterName,
-                                    RedisClusterNode... nodes);
+    public void delNodesFromCluster(int clusterId, RedisClusterNode... nodes);
 
     /**
      * 为集群中的master添加slave
      * 
-     * @param namespace
-     * @param appName
-     * @param clusterName
+     * @param clusterId
      * @param master
      * @param slave
      */
-    public void addSlaveToMaster(String namespace, String appName, String clusterName,
-                                 RedisClusterNode master, RedisClusterNode slave);
+    public void addSlaveToMaster(int clusterId, RedisClusterNode master, RedisClusterNode slave);
 
     /**
      * 在线数据迁移
      * 
-     * @param namespace
-     * @param appName
-     * @param clusterName
      * @param slots
      * @param src
      * @param dest
      */
-    public void migrateSlots(String namespace, String appName, String clusterName, int[] slots,
-                             RedisClusterNode src, RedisClusterNode dest);
+    public void migrateSlots(int clusterId, int[] slots, RedisClusterNode src,
+                             RedisClusterNode dest);
 
     /**
      * 获取集群信息
      * 
-     * @param namespace
-     * @param appName
      * @param clusterName
      */
-    public RedisClusterInfo infoCluster(String namespace, String appName, String clusterName);
+    public RedisClusterInfo infoCluster(int clusterId);
 
     public static class RedisClusterInfo {
         private List<RedisClusterNodeInfo> nodesInfo;
@@ -128,6 +112,15 @@ public interface RedisClusterManager {
         private Role                         role;
         private List<Pair<Integer, Integer>> slotPairs = new ArrayList<Pair<Integer, Integer>>();
         private String                       status;
+        private Long                         keys;
+
+        public Long getKeys() {
+            return keys;
+        }
+
+        public void setKeys(Long keys) {
+            this.keys = keys;
+        }
 
         public String getStatus() {
             return status;
@@ -164,9 +157,10 @@ public interface RedisClusterManager {
     }
 
     public static class RedisClusterNode {
-        private String host;
-        private int    port;
-        private String nodeId;
+        private String              host;
+        private int                 port;
+        private String              nodeId;
+        private Map<String, String> nodeInfo = new HashMap<String, String>();
 
         public RedisClusterNode() {
 
@@ -181,6 +175,10 @@ public interface RedisClusterManager {
             this.host = host;
             this.port = port;
             this.nodeId = nodeId;
+        }
+
+        public Map<String, String> getNodeInfo() {
+            return nodeInfo;
         }
 
         public String getNodeId() {

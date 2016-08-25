@@ -1,1 +1,70 @@
-aaaaa
+<div class="panelBar">
+		<ul class="toolBar">
+			<li><a class="edit" href="redis/cluster/master/add?clusterId=${clusterId}" target="dialog" rel="main"><span>添加master</span></a></li>
+			<li><a class="edit" href="redis/cluster/slave/add?clusterId=${clusterId}" target="dialog" rel="main"><span>添加slave</span></a></li>
+			<li><a class="edit" href="redis/cluster/migrate?clusterId=${clusterId}" target="dialog" rel="main"><span>数据迁移</span></a></li>
+			<li><a class="add" href="demo_page4.html?uid={sid_user}" target="navTab"><span>命中率查询</span></a></li>
+		</ul>
+	</div>
+<textarea id="redis_info" style="width:95%;height:500px">
+</textarea>
+<script type="text/javascript" language="javascript">  
+	var reqInterval;
+    jQuery(document).ready(function () {  
+        reqInterval = setInterval("startRequest()", 2000);  
+    }); 
+    jQuery('#redis_info').focus().blur(function () {  
+        clearInterval(reqInterval);  
+    }); 
+    function startRequest() {  
+        jQuery.ajax({  
+            url: "redis/cluster/getInfo",  
+            type: 'POST',  
+            data: {  
+                clusterId:'${clusterId}'
+            },  
+            success: function (data) {
+            	var html="";
+            	html=html+"集群信息：\r\n";
+            	html=html+"cluster_slots_ok:"+data.clusterInfo.cluster_slots_ok+"\r\n";
+            	html=html+"cluster_slots_assigned:"+data.clusterInfo.cluster_slots_assigned+"\r\n";
+            	html=html+"cluster_stats_messages_received:"+data.clusterInfo.cluster_stats_messages_received+"\r\n";
+            	html=html+"cluster_state:"+data.clusterInfo.cluster_state+"\r\n";
+            	html=html+"cluster_known_nodes:"+data.clusterInfo.cluster_known_nodes+"\r\n";
+            	html=html+"cluster_slots_fail:"+data.clusterInfo.cluster_slots_fail+"\r\n";
+            	html=html+"cluster_slots_pfail:"+data.clusterInfo.cluster_slots_pfail+"\r\n";
+            	html=html+"cluster_current_epoch:"+data.clusterInfo.cluster_current_epoch+"\r\n";
+            	html=html+"cluster_stats_messages_sent:"+data.clusterInfo.cluster_stats_messages_sent+"\r\n";
+            	html=html+"cluster_my_epoch:"+data.clusterInfo.cluster_my_epoch+"\r\n";
+            	html=html+"cluster_size:"+data.clusterInfo.cluster_size+"\r\n";
+            	html=html+"\r\n";
+            	html=html+"\r\n";
+            	html=html+"节点信息：\r\n";
+            	var nodeSize = data.nodesInfo.length;
+            	for(var x=0;x<nodeSize;x++) {
+            		var nodeInfo = data.nodesInfo[x];
+            		html=html+"节点Ip:"+nodeInfo.node.host+"\r\n";
+            		html=html+"节点端口:"+nodeInfo.node.port+"\r\n";
+            		html=html+"节点集群NodeId:"+nodeInfo.node.nodeId+"\r\n";
+            		html=html+"节点集群Role:"+nodeInfo.role+"\r\n";
+            		html=html+"节点集群状态:"+nodeInfo.status+"\r\n";
+            		html=html+"节点维护key的总数:"+nodeInfo.keys+"\r\n";
+            		html=html+"节点管理的slots:\r\n";
+            		var slotPairs = nodeInfo.slotPairs;
+            		for(var y=0;y<slotPairs.length;y++) {
+            			var slotPair = slotPairs[y];
+            			html=html+"left:"+slotPair.left+",";
+            			html=html+"right:"+slotPair.right+"\r\n";
+            		}
+            		html=html+"\r\n";
+            		html=html+"节点监控信息:\r\n"; 		
+            		for(var key in nodeInfo.node.nodeInfo){
+            			html=html+key+":"+nodeInfo.node.nodeInfo[key];
+            		}        		
+            		html=html+"\r\n";
+            	}
+                jQuery("#redis_info").val(html);  
+            }  
+        });  
+    }  
+</script>  

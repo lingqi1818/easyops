@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>jQuery UI Progressbar - Default functionality</title>
+  <link rel="stylesheet" href="jquery-ui-1.11.4/jquery-ui.css">
+  <script src="jquery-ui-1.11.4/jquery-ui.js"></script>
+  <script>
+  i=0;
+  function a(){
+  jQuery.ajax({  
+            url: "redis/cluster/doMigrate",  
+            type: 'POST',  
+            data: {  
+                clusterId:'${clusterId}',
+                startSlot:jQuery("#startSlot").val(),
+                endSlot:jQuery("#startSlot").val(),
+                startIp:jQuery("#srcIp").val(),
+                startPort:jQuery("#srcPort").val(),
+                endIp:jQuery("#destIp").val(),
+                endPort:jQuery("#destPort").val()
+            },  
+            success: function (data) {
+            if ("success"!=data) return;
+            var myinterval = setInterval(function(){
+	   if(i<100){
+		   i++;
+		   }else
+		   {
+		   $("#processok").html("数据迁移成功！！！");
+		   clearInterval(myinterval);
+	   }
+	  $( "#progressbar" ).progressbar({
+	      value: i
+	    });
+	},200);
+            }  
+        });
+ }
+ $(document).ready(function(){
+  $("#doMigrate").click(function(){
+    a();
+  });
+});
+  </script>
+</head>
+<body>
+请输入起始slot：<input type="text" size="20" class="required" id="startSlot"/> <br/>
+请输入结束slot：<input type="text" size="20"class="required" id="endSlot"/> <br/>
+请输入起始节点Ip：<input type="text" size="20"class="required" id="srcIp"/> <br/>
+请输入起始节点端口：<input type="text" size="20"class="required" id="srcPort"/> <br/>
+请输入目标节点Ip：<input type="text" size="20"class="required" id="destIp"/> <br/>
+请输入目标节点端口：<input type="text" size="20"class="required" id="destPort"/> <br/>
+<input id="doMigrate" type="button" value="开始"/><br/>
+数据迁移中：
+<div id="progressbar"></div>
+<div id="processok"></div>
+</body>
+</html>
+
+
+
