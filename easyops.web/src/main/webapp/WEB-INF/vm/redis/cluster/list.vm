@@ -28,7 +28,7 @@
 				<td>${cluster.getMasterSize()}</td>
 				<td>${cluster.status}</td>
 				<td>${cluster.getFormatGmtCreated()}</td>
-				<td>${cluster.getFormatGmtCreated()}</td>
+				<td>${cluster.getFormatGmtModified()}</td>
 				<td><a class="button" href="redis/cluster/info?clusterId=${cluster.id}" target="navTab" rel="main" title="集群信息"><span>查看</span></a></td>
 			</tr>
 			#end

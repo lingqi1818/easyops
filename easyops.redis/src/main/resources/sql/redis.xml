@@ -28,7 +28,7 @@
     
     <update id="updateRedisCluster" parameterType="com.dumpcache.easyops.redis.dal.entity.RedisCluster">
     	update eo_redis_cluster set cluster_name = #{clusterName},master_nodes = #{masterNodes},
-    	slave_node=#{slaveNodes},status=#{status},migrate_process=#{migrateProcess},gmt_modified=now()
+    	slave_nodes=#{slaveNodes},status=#{status},migrate_process=#{migrateProcess},gmt_modified=now()
     	where id=#{id}
     </update>
     

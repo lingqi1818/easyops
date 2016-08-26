@@ -18,6 +18,14 @@ import com.dumpcache.easyops.redis.dal.entity.RedisCluster;
 public interface RedisClusterManager {
 
     /**
+     * 获取迁移进度
+     * 
+     * @param clusterId
+     * @return
+     */
+    public int getMigrateProcess(int clusterId);
+
+    /**
      * 获取集群列表
      */
     public List<RedisCluster> listClusters();

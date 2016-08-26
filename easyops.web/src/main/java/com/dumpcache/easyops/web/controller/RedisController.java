@@ -120,6 +120,11 @@ public class RedisController {
         return "success";
     }
 
+    @RequestMapping("/redis/cluster/getMigrateInfo")
+    public @ResponseBody int doMigrate(@RequestParam(value = "clusterId") int clusterId) {
+        return redisClusterManager.getMigrateProcess(clusterId);
+    }
+
     @RequestMapping("/redis/cluster/getInfo")
     public @ResponseBody RedisClusterInfo getClusterInfo(@RequestParam(value = "clusterId") int clusterId) {
         return redisClusterManager.infoCluster(clusterId);

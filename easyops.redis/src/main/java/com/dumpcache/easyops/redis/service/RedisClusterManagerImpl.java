@@ -154,6 +154,12 @@ public class RedisClusterManagerImpl implements RedisClusterManager {
     @Override
     public void migrateSlots(final int clusterId, final int[] slots, final RedisClusterNode src,
                              final RedisClusterNode dest) {
+        RedisCluster rc = redisMapper.getRedisClusterById(clusterId);
+        if (!RedisCluster.STATUS_MIGRATEING.equalsIgnoreCase(rc.getStatus())) {
+            rc.setStatus(RedisCluster.STATUS_MIGRATEING);
+            rc.setMigrateProcess(0);
+            redisMapper.updateRedisCluster(rc);
+        }
         Thread migrateThread = new Thread(new Runnable() {
 
             @Override
@@ -205,6 +211,7 @@ public class RedisClusterManagerImpl implements RedisClusterManager {
                                 }
                             }
                         }
+                        destJedis.clusterSetSlotNode(slot, destNodeId);
                         LOGGER.info("migrate slot:" + slot + " success !!!");
                     } catch (Exception ex) {
                         LOGGER.error("set slot migrate or import error:" + ex);
@@ -213,6 +220,7 @@ public class RedisClusterManagerImpl implements RedisClusterManager {
 
                 RedisCluster rc = redisMapper.getRedisClusterById(clusterId);
                 rc.setMigrateProcess(100);
+                rc.setStatus(RedisCluster.STATUS_NORMAL);
                 redisMapper.updateRedisCluster(rc);
             }
             LOGGER.info("migrate all slots success !!!");
@@ -386,6 +394,15 @@ public class RedisClusterManagerImpl implements RedisClusterManager {
     @Override
     public List<RedisCluster> listClusters() {
         return redisMapper.getAllRedisClusters();
+    }
+
+    @Override
+    public int getMigrateProcess(int clusterId) {
+        RedisCluster rc = redisMapper.getRedisClusterById(clusterId);
+        if (rc != null) {
+            return rc.getMigrateProcess();
+        }
+        return 0;
     }
 
 }

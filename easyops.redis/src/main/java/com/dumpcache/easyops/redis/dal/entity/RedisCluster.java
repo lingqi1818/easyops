@@ -6,6 +6,8 @@ import java.util.Date;
 import org.apache.commons.lang3.StringUtils;
 
 public class RedisCluster {
+    public static String            STATUS_MIGRATEING = "migrating";
+    public static String            STATUS_NORMAL     = "normal";
     private int                     id;
     private String                  clusterName;
     private String                  masterNodes;
@@ -14,7 +16,7 @@ public class RedisCluster {
     private Date                    gmtCreated;
     private Date                    gmtModified;
     private int                     migrateProcess;
-    private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private static SimpleDateFormat sdf               = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public int getMasterSize() {
         if (StringUtils.isEmpty(masterNodes)) {
