@@ -44,6 +44,11 @@ public class RedisController {
         return "redis/cluster/add";
     }
 
+    @RequestMapping("/redis/hit/keylist")
+    public String hitKeyList() {
+        return "/redis/hit/keylist";
+    }
+
     @RequestMapping("/redis/cluster/slave/add")
     public String addSlave(@RequestParam(value = "clusterId") int clusterId, Model model) {
         model.addAttribute("clusterId", clusterId);

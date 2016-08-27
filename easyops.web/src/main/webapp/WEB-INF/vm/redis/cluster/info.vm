@@ -10,11 +10,16 @@
 </textarea>
 <script type="text/javascript" language="javascript">  
 	var reqInterval;
+	var reqInterval1;
     jQuery(document).ready(function () {  
         reqInterval = setInterval("startRequest()", 2000);  
     }); 
+    jQuery('#redis_info').focus(function () { 
+    	reqInterval1 = setInterval("startRequest()", 2000); 
+    });
     jQuery('#redis_info').focus().blur(function () {  
-        clearInterval(reqInterval);  
+        clearInterval(reqInterval);
+        clearInterval(reqInterval1);    
     }); 
     function startRequest() {  
         jQuery.ajax({  
