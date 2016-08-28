@@ -1,4 +1,4 @@
-package com.dumpcache.easyops.configserver;
+package com.dumpcache.easyops.configserver.service.util;
 
 /**
  * 混合工具类

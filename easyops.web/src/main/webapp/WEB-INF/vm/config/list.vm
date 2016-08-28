@@ -1,1 +1,91 @@
-bbbbbb
+<form id="pagerForm" method="post" action="config/list">
+	<input type="hidden" name="pageNum" value="${pageNum}" />
+	<input type="hidden" name="numPerPage" value="${numPerPage}" />
+	<input type="hidden" name="namespace" value="${namespace}" />
+	<input type="hidden" name="app" value="${app}" />
+</form>
+<div class="pageHeader">
+	<form onsubmit="return navTabSearch(this);" action="config/list" method="post">
+	<div class="searchBar">
+		<table class="searchContent">
+			<tr>
+				<td>
+					<select class="combox" name="namespace">
+						<option value="">所有namespace</option>
+						#foreach($namespace in $namespaces)
+						<option value="${namespace}">${namespace}</option>
+						#end
+					</select>
+				</td>
+				
+				<td>
+					<select class="combox" name="app">
+						<option value="">所有app</option>
+						#foreach($app in $apps)
+						<option value="${app}">${app}</option>
+						#end
+					</select>
+				</td>
+				
+			</tr>
+		</table>
+		<div class="subBar">
+			<ul>
+				<li><div class="buttonActive"><div class="buttonContent"><button type="submit">查找</button></div></div></li>
+			</ul>
+		</div>
+	</div>
+	</form>
+</div>
+<div class="pageContent">
+	<div class="panelBar">
+		<ul class="toolBar">
+			<li><a class="add" href="config/list" target="navTab" rel="main"><span>刷新</span></a></li>
+			<li><a class="add" href="config/add" target="dialog" rel="main"><span>添加</span></a></li>
+			<li><a class="delete" href="config/delete?id={sid_user}" target="ajaxTodo" title="确定要删除吗?"><span>删除</span></a></li>
+		</ul>
+	</div>
+	<table class="table" width="100%" layoutH="138">
+		<thead>
+			<tr>
+				<th width="120">配置ID</th>
+				<th width="120">namespace</th>
+				<th width="120">app</th>
+				<th width="120">key</th>
+				<th width="120">value</th>
+				<th width="80">添加日期</th>
+				<th width="80">修改日期</th>
+				<th width="80">操作</th>
+			</tr>
+		</thead>
+		<tbody>		
+			#foreach($config in $configs)
+			<tr target="sid_user" rel="${config.id}">
+				<td>${config.id}</td>
+				<td>${config.namespace}</td>
+				<td>${config.app}</td>
+				<td>${config.key}</td>
+				<td>${config.value}</td>
+				<td>${config.getFormatGmtCreated()}</td>
+				<td>${config.getFormatGmtModified()}</td>
+				<td><a class="button" href="config/modify?id=${config.id}" target="dialog" rel="main" title="修改配置"><span>修改</span></a></td>
+			</tr>
+			#end
+		</tbody>
+	</table>
+	<div class="panelBar">
+		<div class="pages">
+			<span>显示</span>
+			<select class="combox" name="numPerPage" onchange="navTabPageBreak({numPerPage:this.value})">
+				<option value="20">20</option>
+				<option value="50">50</option>
+				<option value="100">100</option>
+				<option value="200">200</option>
+			</select>
+			<span>条，共${totalCount}条</span>
+		</div>
+
+		<div class="pagination" targetType="navTab" totalCount="200" numPerPage="20" pageNumShown="10" currentPage="${pageNum}"></div>
+	
+	</div>
+</div>

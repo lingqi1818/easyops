@@ -1,0 +1,28 @@
+<div class="pageContent">
+	<form method="post" action="config/save" class="pageForm required-validate" onsubmit="return validateCallback(this, dialogAjaxDone);">
+		<div class="pageFormContent" layoutH="56">
+			<p>
+				<label>namespace：</label>
+				<input name="namespace" class="required" type="text" size="30" value="" alt="$!{config.namespace}"/>
+			</p>
+			<p>
+				<label>app：</label>
+				<input name="app" class="required" type="text" size="30" value="" alt="$!{config.app}"/>
+			</p>
+			<p>
+				<label>key：</label>
+				<input name="kv_key" class="required" type="text" size="30" value="" alt="$!{config.key}"/>
+			</p>
+			<p>
+				<label>添加value：</label>
+				<textarea name="kv_val" rows="3" class="required" cols="50" >$!{config.value}</textarea>
+			</p>
+		</div>
+		<div class="formBar">
+			<ul>
+				<li><div class="buttonActive"><div class="buttonContent"><button type="submit">提交</button></div></div></li>
+				<li><div class="button"><div class="buttonContent"><button type="button" class="close">取消</button></div></div></li>
+			</ul>
+		</div>
+	</form>
+</div>

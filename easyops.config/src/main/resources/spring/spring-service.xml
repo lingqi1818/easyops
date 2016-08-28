@@ -14,4 +14,6 @@ http://www.springframework.org/schema/mvc/spring-mvc.xsd"
 	</bean>
 	
 	<context:component-scan base-package="com.dumpcache.easyops.*.service" />
+	
+	<bean id="configManager" class="com.dumpcache.easyops.configserver.service.MysqlConfigService" init-method="init" />
 </beans>

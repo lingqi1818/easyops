@@ -1,4 +1,4 @@
-package com.dumpcache.easyops.configserver;
+package com.dumpcache.easyops.configserver.service;
 
 import java.util.List;
 
@@ -12,6 +12,8 @@ import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher.Event.EventType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.dumpcache.easyops.configserver.service.util.MiscUtils;
 
 public class ZKConfigService extends AbstractConfigServiceImpl implements ZKClient {
     private final static Logger LOGGER = LoggerFactory.getLogger(ZKConfigService.class);
@@ -163,6 +165,54 @@ public class ZKConfigService extends AbstractConfigServiceImpl implements ZKClie
             throw new RuntimeException(e);
         }
         return sb.toString();
+    }
+
+    @Override
+    public List<Config> listAllConfigs(int start, int count) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public int getAllConfigsCount() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public List<Config> listConfigs(String namespace, String app, int start, int count) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public int getConfigsCount(String namespace, String app) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public List<String> getAllNamespaces() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public List<String> getAllApps() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Config getConfigById(int id) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public void deleteConfigById(int id) {
+        // TODO Auto-generated method stub
+
     }
 
 }

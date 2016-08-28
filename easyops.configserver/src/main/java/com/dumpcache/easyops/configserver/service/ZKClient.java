@@ -1,4 +1,4 @@
-package com.dumpcache.easyops.configserver;
+package com.dumpcache.easyops.configserver.service;
 
 /**
  * zookeeper客户端

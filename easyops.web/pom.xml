@@ -24,6 +24,11 @@
   <version>${pom.version}</version>
 </dependency>
 <dependency>
+  <groupId>easyops.configserver</groupId>
+  <artifactId>easyops.configserver</artifactId>
+  <version>${pom.version}</version>
+</dependency>
+<dependency>
   <groupId>easyops.redis</groupId>
   <artifactId>easyops.redis</artifactId>
   <version>${pom.version}</version>

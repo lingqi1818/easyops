@@ -1,4 +1,4 @@
-package com.dumpcache.easyops.configserver;
+package com.dumpcache.easyops.configserver.service;
 
 /**
  * 动态配置服务

@@ -1,4 +1,4 @@
-package com.dumpcache.easyops.configserver;
+package com.dumpcache.easyops.configserver.service;
 
 import java.util.Date;
 import java.util.Map;
@@ -7,6 +7,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.dumpcache.easyops.configserver.service.util.MiscUtils;
 
 public abstract class AbstractConfigServiceImpl implements ConfigService, ConfigManager {
     private final static Logger               LOGGER         = LoggerFactory
