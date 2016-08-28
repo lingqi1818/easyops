@@ -40,4 +40,12 @@ http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd"
 		</property>
 	</bean>
 	
+	
+	<mvc:interceptors>
+    <mvc:interceptor>  
+        <mvc:mapping path="/*"/>  
+        <bean class="com.dumpcache.easyops.web.interceptor.PermissionInterceptor"/>  
+    </mvc:interceptor>  
+</mvc:interceptors>  
+	
 </beans>

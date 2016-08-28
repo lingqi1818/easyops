@@ -13,9 +13,10 @@
 
         <div class="page-container">
             <img style="width: 100px; height: 40px;" src="img/logo.png"><h1>河狸家统一自动化运维平台(EasyOps)</h1>
-            <form action="" method="post">
+            <form action="doLogin" method="post">
                 <input type="text" name="username" class="username" placeholder="用户名">
                 <input type="password" name="password" class="password" placeholder="密码">
+                <font color="red">$!{msg}</font>
                 <button type="submit">提交</button>
                 <div class="error"><span>+</span></div>
             </form>
