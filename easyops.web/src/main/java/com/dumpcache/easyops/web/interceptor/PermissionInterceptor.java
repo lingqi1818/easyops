@@ -12,8 +12,8 @@ public class PermissionInterceptor extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
                              Object handler)
             throws Exception {
-        if ("login".equalsIgnoreCase(request.getRequestURI())
-                || "doLogin".equalsIgnoreCase(request.getRequestURI())) {
+        if (request.getRequestURI() != null && request.getRequestURI().contains("login")
+                || request.getRequestURI().contains("doLogin")) {
             return true;
         }
         boolean isLogin = false;

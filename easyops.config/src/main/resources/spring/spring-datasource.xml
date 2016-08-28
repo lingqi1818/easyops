@@ -13,9 +13,9 @@ http://www.springframework.org/schema/aop/spring-aop-3.0.xsd"
           
     <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">   
     <property name="driverClassName" value="com.mysql.jdbc.Driver" />  
-    <property name="url" value="jdbc:mysql://localhost:3306/test?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;characterEncoding=UTF-8" />  
-    <property name="username"><value>root</value></property>  
-        <property name="password"><value>root</value></property>  
+    <property name="url" value="${app.jdbc.url}" />  
+    <property name="username"><value>${app.jdbc.username}</value></property>  
+        <property name="password"><value>${app.jdbc.password}</value></property>  
         <property name="maxActive"><value>20</value></property>  
         <property name="initialSize"><value>1</value></property>  
         <property name="maxWait"><value>60000</value></property>  
@@ -28,31 +28,6 @@ http://www.springframework.org/schema/aop/spring-aop-3.0.xsd"
         <property name= "validationQuery" value="select 1" /> 
 </bean>
 
-    <!-- <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-    	<property name="driverClassName" value="${merchant.jdbc.driver}" />
-        <property name="url" value="${merchant.jdbc.url}" />
-        <property name="username" value="${merchant.jdbc.username}" />
-        <property name="password">
-            <bean class="com.helijia.framework.datasource.cfg.SimplePasswordCallback">
-                <property name="password" value="${merchant.jdbc.password}"/>
-            </bean>
-        </property>
-        <property name="connectionProperties" value="clientEncoding=UTF-8" />
-        <property name="maxActive" value="${merchant.jdbc.pool.size}" />
-        <property name="initialSize" value="1" />
-        <property name="maxWait" value="60000" />
-        <property name="maxIdle" value="${merchant.jdbc.pool.size}" />
-        <property name="minIdle" value="1" />
-        <property name="removeAbandoned" value="true" />
-        <property name="removeAbandonedTimeout" value="180" />
-        <property name="validationQuery" value="select 1" />
-        <property name="validationQueryTimeout" value="1" />
-        <property name="testWhileIdle" value="true" />
-        <property name="testOnBorrow" value="false" />
-        <property name="testOnReturn" value="false" />
-        <property name="timeBetweenEvictionRunsMillis" value="30000" />
-        <property name="numTestsPerEvictionRun" value="${merchant.jdbc.pool.size}" />
-    </bean> -->
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="dataSource" ref="dataSource" />
         <property name="mapperLocations">

@@ -9,18 +9,8 @@
 		</layout>
 	</appender>
 
-
-
 	<appender name="APP-LOG-FILE" class="org.apache.log4j.DailyRollingFileAppender">
-		<param name="File" value="${app.log.dir.path}/app-${jettyPort}.log" />
-		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="%d - %c -%-4r [%t] %-5p %x - %m%n" />
-		</layout>
-	</appender>
-
-
-	<appender name="DEMO-LOG-FILE" class="org.apache.log4j.DailyRollingFileAppender">
-		<param name="File" value="${app.log.dir.path}/test-${jettyPort}.log" />
+		<param name="File" value="${app.log.dir.path}/easyops.log" />
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern" value="%d - %c -%-4r [%t] %-5p %x - %m%n" />
 		</layout>
@@ -29,11 +19,6 @@
 	<logger name="app-log" additivity="false">
 		<level value="${app.log.level}" />
 		<appender-ref ref="APP-LOG-FILE" />
-	</logger>
-	
-	<logger name="demo-log" additivity="false">
-		<level value="${app.log.level}" />
-		<appender-ref ref="DEMO-LOG-FILE" />
 	</logger>
 	
 	<root>
