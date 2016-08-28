@@ -1,10 +1,10 @@
 package com.dumpcache.easyops.configserver.service;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,14 +74,14 @@ public class MysqlConfigService extends AbstractConfigServiceImpl {
                 pst.setString(2, app);
                 pst.setString(3, key);
                 pst.setString(4, val);
-                pst.setDate(5, new Date(System.currentTimeMillis()));
-                pst.setDate(6, new Date(System.currentTimeMillis()));
+                pst.setTimestamp(5, new Timestamp(System.currentTimeMillis()));
+                pst.setTimestamp(6, new Timestamp(System.currentTimeMillis()));
             } else {
                 pst.setString(1, val);
                 pst.setString(2, namespace);
                 pst.setString(3, app);
                 pst.setString(4, key);
-                pst.setDate(5, new Date(System.currentTimeMillis()));
+                pst.setTimestamp(5, new Timestamp(System.currentTimeMillis()));
             }
             pst.execute();
 
@@ -162,7 +162,7 @@ public class MysqlConfigService extends AbstractConfigServiceImpl {
         try {
             conn = dataSource.getConnection();
             PreparedStatement pst = conn.prepareStatement(
-                    "select id,namespace,app,config_key,val,gmt_created,gmt_modified from kv_config limit "
+                    "select id,namespace,app,config_key,val,gmt_created,gmt_modified from kv_config order by id desc limit "
                             + start + "," + count);
             ResultSet result = pst.executeQuery();
             if (result != null) {
@@ -173,8 +173,8 @@ public class MysqlConfigService extends AbstractConfigServiceImpl {
                     c.setApp(result.getString(3));
                     c.setKey(result.getString(4));
                     c.setValue(result.getString(5));
-                    c.setGmtCreated(result.getDate(6));
-                    c.setGmtModified(result.getDate(7));
+                    c.setGmtCreated(result.getTimestamp(6));
+                    c.setGmtModified(result.getTimestamp(7));
                     clist.add(c);
                 }
             }
@@ -223,7 +223,7 @@ public class MysqlConfigService extends AbstractConfigServiceImpl {
         try {
             conn = dataSource.getConnection();
             PreparedStatement pst = conn.prepareStatement(
-                    "select id,namespace,app,config_key,val,gmt_created,gmt_modified from kv_config where namespace=? and app=? limit "
+                    "select id,namespace,app,config_key,val,gmt_created,gmt_modified from kv_config where namespace=? and app=? order by id desc limit "
                             + start + "," + count);
             pst.setString(1, namespace);
             pst.setString(2, app);
@@ -236,8 +236,8 @@ public class MysqlConfigService extends AbstractConfigServiceImpl {
                     c.setApp(result.getString(3));
                     c.setKey(result.getString(4));
                     c.setValue(result.getString(5));
-                    c.setGmtCreated(result.getDate(6));
-                    c.setGmtModified(result.getDate(7));
+                    c.setGmtCreated(result.getTimestamp(6));
+                    c.setGmtModified(result.getTimestamp(7));
                     clist.add(c);
                 }
             }
