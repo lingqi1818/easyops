@@ -58,7 +58,11 @@ public interface ConfigManager {
         }
 
         public String getSimpleVal() {
-            return this.value.substring(0, 10);
+            if (this.value != null && this.value.length() > 10) {
+                return this.value.substring(0, 10) + "...";
+            } else {
+                return this.value;
+            }
         }
 
         public String getFormatGmtCreated() {

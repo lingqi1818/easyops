@@ -58,6 +58,7 @@ public class RedisClusterManagerImpl implements RedisClusterManager {
         redisMapper.insertRedisCluster(rc);
     }
 
+    @SuppressWarnings("static-access")
     private void initClusterSlots(List<RedisClusterNode> nodes) {
         int start = 0;
         int regionSlots = MAX_SLOTS / nodes.size() + 1;
@@ -75,19 +76,36 @@ public class RedisClusterManagerImpl implements RedisClusterManager {
             int finalslots[] = new int[index];
             System.arraycopy(slots, 0, finalslots, 0, index);
             LOGGER.debug("slots:" + "min:" + finalslots[0] + ",max:" + finalslots[index - 1]);
-            jedis.flushAll();
+            //jedis.flushAll();
             jedis.clusterFlushSlots();
             jedis.clusterAddSlots(finalslots);
             jedis.close();
+            try {
+                Thread.currentThread().sleep(5000);
+            } catch (InterruptedException e) {
+                LOGGER.error(e.getMessage(), e);
+            }
         }
     }
 
+    @SuppressWarnings("static-access")
     private void addNodesToCluster(List<RedisClusterNode> nodes) {
-        Jedis jedis = new Jedis(nodes.get(0).getHost(), nodes.get(0).getPort());
-        for (int i = 1; i < nodes.size(); i++) {
-            RedisClusterNode node = nodes.get(i);
-            jedis.clusterMeet(node.getHost(), node.getPort());
-            jedis.close();
+        for (int i = 0; i < nodes.size(); i++) {
+            for (int j = 0; j < nodes.size(); j++) {
+                if (nodes.get(i).getHost().equals(nodes.get(j).getHost())
+                        && nodes.get(i).getPort() == nodes.get(j).getPort()) {
+                    continue;
+                }
+                Jedis jedis = new Jedis(nodes.get(i).getHost(), nodes.get(i).getPort());
+                jedis.clusterMeet(nodes.get(j).getHost(), nodes.get(j).getPort());
+                jedis.close();
+                try {
+                    Thread.currentThread().sleep(1000);
+                } catch (InterruptedException e) {
+                    LOGGER.error(e.getMessage(), e);
+
+                }
+            }
         }
     }
 
