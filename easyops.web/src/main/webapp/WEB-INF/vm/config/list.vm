@@ -65,7 +65,7 @@
 				<td>${config.namespace}</td>
 				<td>${config.app}</td>
 				<td>${config.key}</td>
-				<td>${config.value}</td>
+				<td>${config.getSimpleVal()}</td>
 				<td>${config.getFormatGmtCreated()}</td>
 				<td>${config.getFormatGmtModified()}</td>
 				<td><a class="button" href="config/modify?id=${config.id}" target="dialog" rel="main" title="修改配置"><span>修改</span></a></td>

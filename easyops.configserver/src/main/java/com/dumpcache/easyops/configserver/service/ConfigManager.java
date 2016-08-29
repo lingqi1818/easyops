@@ -57,6 +57,10 @@ public interface ConfigManager {
             this.id = id;
         }
 
+        public String getSimpleVal() {
+            return this.value.substring(0, 10);
+        }
+
         public String getFormatGmtCreated() {
             return sdf.format(gmtCreated);
         }
