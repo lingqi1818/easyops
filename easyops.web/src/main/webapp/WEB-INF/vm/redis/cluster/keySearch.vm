@@ -1,0 +1,26 @@
+<div class="pageContent">
+<div id="jbsxBox2" class="unitBox" style="float:left; display:block; overflow:auto; width:514px;">
+	<form method="post" onsubmit="return divSearch(this, 'jbsxBox2');" action="redis/cluster/doKeySearch?clusterId=${clusterId}" class="pageForm required-validate">
+		<div class="pageFormContent" layoutH="56">
+			<p>
+				<label>namespace：</label>
+				<input name="namespace" class="required" type="text" size="30" value="" alt="$!{config.namespace}"/>
+			</p>
+			<p>
+				<label>app：</label>
+				<input name="app" class="required" type="text" size="30" value="" alt="$!{config.app}"/>
+			</p>
+			<p>
+				<label>key：</label>
+				<input name="kv_key" class="required" type="text" size="30" value="" alt="$!{config.key}"/>
+			</p>
+		</div>
+		<div class="formBar">
+			<ul>
+				<li><div class="buttonActive"><div class="buttonContent"><button type="submit">提交</button></div></div></li>
+				<li><div class="button"><div class="buttonContent"><button type="button" class="close">取消</button></div></div></li>
+			</ul>
+		</div>
+	</form>
+</div>
+</div>

@@ -3,6 +3,8 @@ package com.dumpcache.easyops.web.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.sql.DataSource;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.dumpcache.easyops.redis.dal.entity.RedisCluster;
+import com.dumpcache.easyops.redis.service.ClusterRedisServiceImpl;
 import com.dumpcache.easyops.redis.service.RedisClusterManager;
 import com.dumpcache.easyops.redis.service.RedisClusterManager.RedisClusterInfo;
 import com.dumpcache.easyops.redis.service.RedisClusterManager.RedisClusterNode;
@@ -29,6 +32,8 @@ import com.dumpcache.easyops.redis.util.Utils;
 public class RedisController {
     @Autowired
     private RedisClusterManager redisClusterManager;
+    @Autowired
+    private DataSource          dataSource;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RedisController.class);
 
@@ -59,6 +64,12 @@ public class RedisController {
     public String addMaster(@RequestParam(value = "clusterId") int clusterId, Model model) {
         model.addAttribute("clusterId", clusterId);
         return "redis/cluster/master/add";
+    }
+
+    @RequestMapping("/redis/node/list")
+    public String nodeList(Model model) {
+        // model.addAttribute("clusterId", clusterId);
+        return "redis/node/list";
     }
 
     @RequestMapping("/redis/cluster/slave/create")
@@ -108,6 +119,28 @@ public class RedisController {
     public String migrate(@RequestParam(value = "clusterId") int clusterId, Model model) {
         model.addAttribute("clusterId", clusterId);
         return "redis/cluster/migrate";
+    }
+
+    @RequestMapping("/redis/cluster/keySearch")
+    public String keySearch(@RequestParam(value = "clusterId") int clusterId, Model model) {
+        model.addAttribute("clusterId", clusterId);
+        return "redis/cluster/keySearch";
+    }
+
+    @RequestMapping("/redis/cluster/doKeySearch")
+    public String doKeySearch(@RequestParam(value = "namespace") String namespace,
+                              @RequestParam(value = "app") String appName,
+                              @RequestParam(value = "kv_key") String key,
+                              @RequestParam(value = "clusterId") int clusterId, Model model) {
+        ClusterRedisServiceImpl redisService = new ClusterRedisServiceImpl();
+        redisService.setDataSource(dataSource);
+        redisService.setClusterId(clusterId);
+        redisService.setNamespace(namespace);
+        redisService.setAppName(appName);
+        redisService.init();
+        model.addAttribute("result", redisService.get(key));
+
+        return "redis/cluster/keySearchResult";
     }
 
     @RequestMapping("/redis/cluster/doMigrate")

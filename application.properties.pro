@@ -1,0 +1,13 @@
+app.java.home=/Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home/
+app.nginx.home=/usr/local/nginx1.2.8/
+app.jetty.home=/Users/chenke/softs/jetty-distribution-8.1.15.v20140411/
+app.jetty.port=7001
+app.install.home=/Users/chenke/Documents/javawork/template/template.deploy/target/classes/
+app.log.dir.path=/home/www/wwwroot/logs/
+app.log.level=info
+app.listen.port=8080
+app.domain.name=127.0.0.1
+app.static.dir=/Users/chenke
+app.jdbc.url=jdbc:mysql://localhost:3306/test?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;characterEncoding=UTF-8
+app.jdbc.username=root
+app.jdbc.password=root

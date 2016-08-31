@@ -3,7 +3,8 @@
 			<li><a class="edit" href="redis/cluster/master/add?clusterId=${clusterId}" target="dialog" rel="main"><span>添加master</span></a></li>
 			<li><a class="edit" href="redis/cluster/slave/add?clusterId=${clusterId}" target="dialog" rel="main"><span>添加slave</span></a></li>
 			<li><a class="edit" href="redis/cluster/migrate?clusterId=${clusterId}" target="dialog" rel="main"><span>数据迁移</span></a></li>
-			<li><a class="add" href="demo_page4.html?uid={sid_user}" target="navTab"><span>命中率查询</span></a></li>
+			<li><a class="delete" href="redis/cluster/dismiss?clusterId=${clusterId}" target="dialog" rel="main"><span>遣散集群</span></a></li>
+			<li><a class="add" href="redis/cluster/keySearch?clusterId=${clusterId}" target="dialog" rel="main"><span>key查询</span></a></li>
 		</ul>
 	</div>
 <textarea id="redis_info" style="width:95%;height:500px">

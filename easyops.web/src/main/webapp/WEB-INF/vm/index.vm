@@ -124,7 +124,7 @@ $(function(){
 						<ul class="tree treeFolder">
 							<li><a href="#">应用管理</a>
 								<ul>
-									<li><a href="manager/machine" target="navTab" rel="main">服务器管理</a></li>
+									<li><a href="#">服务器管理</a></li>
 								</ul>
 								<ul>
 									<li><a href="config/list" target="navTab" rel="main">配置项管理</a></li>
@@ -132,16 +132,17 @@ $(function(){
 							</li>					
 							<li><a href="#">发布管理</a>
 								<ul>
-									<li><a href="manager/memory" target="navTab" rel="main">今日发布列表</a></li>
+									<li><a href="#" rel="main">今日发布列表</a></li>
 								</ul>
 								<ul>
-									<li><a href="manager/memory" target="navTab" rel="main">历史发布列表</a></li>
+									<li><a href="#" rel="main">历史发布列表</a></li>
 								</ul>
 							</li>
 							<li><a href="#">中间件管理</a>
 								<ul>
 									<li><a href="#">Redis</a>
 										<ul>
+											<li><a href="redis/node/list" target="navTab" rel="main">Redis集群节点管理</a></li>
 											<li><a href="redis/cluster/list" target="navTab" rel="main">Redis集群管理</a></li>
 											<li><a href="redis/hit/keylist" target="navTab" rel="main">命中率key监控管理</a></li>
 										</ul>
