@@ -21,6 +21,8 @@ import com.dumpcache.easyops.redis.service.RedisClusterManager;
 import com.dumpcache.easyops.redis.service.RedisClusterManager.RedisClusterInfo;
 import com.dumpcache.easyops.redis.service.RedisClusterManager.RedisClusterNode;
 import com.dumpcache.easyops.redis.util.Utils;
+import com.dumpcache.easyops.web.service.RedisStatService;
+import com.dumpcache.easyops.web.service.RedisStatService.Stat;
 
 /**
  * Redis管理控制台
@@ -34,6 +36,8 @@ public class RedisController {
     private RedisClusterManager redisClusterManager;
     @Autowired
     private DataSource          dataSource;
+    @Autowired
+    private RedisStatService    redisStatService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RedisController.class);
 
@@ -49,8 +53,51 @@ public class RedisController {
         return "redis/cluster/add";
     }
 
+    @RequestMapping("/redis/hit/addKey")
+    public String addHitKey() {
+        return "redis/hit/addKey";
+    }
+
+    @RequestMapping("/redis/hit/deleteKey")
+    public String delete(@RequestParam(value = "key") String key, Model model) {
+        try {
+            String args[] = key.split("_");
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < args.length - 1; i++) {
+                sb.append(args[i]).append("_");
+            }
+            redisStatService.deleteMonitorKey(Integer.valueOf(args[args.length - 1]),
+                    sb.toString().substring(0, sb.toString().length() - 1));
+            model.addAttribute("statusCode", 200);
+            model.addAttribute("msg", "删除key成功！");
+            return "error";
+        } catch (Exception ex) {
+            model.addAttribute("statusCode", 300);
+            model.addAttribute("msg", "删除key失败，系统内部错误！");
+            return "error";
+        }
+    }
+
+    @RequestMapping("/redis/hit/saveKey")
+    public String saveKey(@RequestParam(value = "clusterId") int clusterId,
+                          @RequestParam(value = "monitorKey") String monitorKey, Model model) {
+
+        try {
+            redisStatService.addMonitorKey(clusterId, monitorKey);
+            model.addAttribute("statusCode", 200);
+            model.addAttribute("msg", "添加key成功！");
+            return "error";
+        } catch (Exception ex) {
+            model.addAttribute("statusCode", 300);
+            model.addAttribute("msg", "添加key失败，系统内部错误！");
+            return "error";
+        }
+    }
+
     @RequestMapping("/redis/hit/keylist")
-    public String hitKeyList() {
+    public String hitKeyList(Model model) {
+        List<Stat> stats = redisStatService.getAllStats();
+        model.addAttribute("stats", stats);
         return "/redis/hit/keylist";
     }
 
@@ -133,13 +180,16 @@ public class RedisController {
                               @RequestParam(value = "kv_key") String key,
                               @RequestParam(value = "clusterId") int clusterId, Model model) {
         ClusterRedisServiceImpl redisService = new ClusterRedisServiceImpl();
-        redisService.setDataSource(dataSource);
-        redisService.setClusterId(clusterId);
-        redisService.setNamespace(namespace);
-        redisService.setAppName(appName);
-        redisService.init();
-        model.addAttribute("result", redisService.get(key));
-
+        try {
+            redisService.setDataSource(dataSource);
+            redisService.setClusterId(clusterId);
+            redisService.setNamespace(namespace);
+            redisService.setAppName(appName);
+            redisService.init();
+            model.addAttribute("result", redisService.get(key));
+        } finally {
+            redisService.close();
+        }
         return "redis/cluster/keySearchResult";
     }
 

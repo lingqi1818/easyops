@@ -65,4 +65,6 @@ public interface RedisService {
     Long zremrangeByScore(String key, String start, String end);
 
     public ScanResult<String> sScan(String key, String cursor, ScanParams scanParams);
+
+    public void close();
 }

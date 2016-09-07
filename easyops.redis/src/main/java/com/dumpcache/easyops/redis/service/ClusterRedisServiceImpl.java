@@ -1,5 +1,6 @@
 package com.dumpcache.easyops.redis.service;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -38,6 +39,10 @@ public class ClusterRedisServiceImpl implements RedisService {
     private DataSource           dataSource;
     private int                  clusterId;
     private HitStatisticsService hitStatisticsService;
+
+    public JedisCluster getJedisCluster() {
+        return jedisCluster;
+    }
 
     public void setClusterId(int clusterId) {
         this.clusterId = clusterId;
@@ -427,6 +432,15 @@ public class ClusterRedisServiceImpl implements RedisService {
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
             return null;
+        }
+    }
+
+    @Override
+    public void close() {
+        try {
+            this.jedisCluster.close();
+        } catch (IOException e) {
+            LOGGER.error(e.getMessage(), e);
         }
     }
 

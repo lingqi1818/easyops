@@ -24,6 +24,38 @@ public class HitStatisticsService {
         this.clusterId = clusterId;
     }
 
+    public void addMonitorKey(String key) {
+        jedisCluster.sadd("easy_ops_redis_hit_stat_monitor_keys_set_" + clusterId, key);
+    }
+
+    public void deleteMonitorKey(String key) {
+        jedisCluster.srem("easy_ops_redis_hit_stat_monitor_keys_set_" + clusterId, key);
+        jedisCluster.del("easy_ops_redis_hit_stat_monitor_key_hit_" + clusterId + "_" + key);
+        jedisCluster.del("easy_ops_redis_hit_stat_monitor_key_total_" + clusterId + "_" + key);
+    }
+
+    public Set<String> getMonitorKeys() {
+        return jedisCluster.smembers("easy_ops_redis_hit_stat_monitor_keys_set_" + clusterId);
+    }
+
+    public Long getMonitorKeyHitNumber(String key) {
+        String res = jedisCluster
+                .get("easy_ops_redis_hit_stat_monitor_key_hit_" + clusterId + "_" + key);
+        if (StringUtils.isEmpty(res)) {
+            return 0L;
+        }
+        return Long.valueOf(res);
+    }
+
+    public Long getMonitorKeyTotalNumber(String key) {
+        String res = jedisCluster
+                .get("easy_ops_redis_hit_stat_monitor_key_total_" + clusterId + "_" + key);
+        if (StringUtils.isEmpty(res)) {
+            return 0L;
+        }
+        return Long.valueOf(res);
+    }
+
     public void stat(final String key, final boolean isHit) {
         pool.submit(new Runnable() {
             public void run() {

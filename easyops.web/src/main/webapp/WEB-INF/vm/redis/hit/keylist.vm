@@ -4,23 +4,27 @@
 <div class="pageContent">
 	<div class="panelBar">
 		<ul class="toolBar">
-			<li><a class="add" href="redis/cluster/list" target="navTab" rel="main"><span>刷新</span></a></li>
-			<li><a class="add" href="redis/cluster/add" target="dialog" rel="main"><span>添加</span></a></li>
-			<li><a class="delete" href="redis/node/delete" target="dialog" rel="main"><span>删除</span></a></li>
+			<li><a class="add" href="redis/hit/keylist" target="navTab" rel="main"><span>刷新</span></a></li>
+			<li><a class="add" href="redis/hit/addKey" target="dialog" rel="main"><span>添加</span></a></li>
+			<li><a class="delete" href="redis/hit/deleteKey?key={sid_user}" target="ajaxTodo" title="确定要删除吗?"><span>删除</span></a></li>
 		</ul>
 	</div>
 	<table class="table" width="100%" layoutH="138">
 		<thead>
 			<tr>
+				<th width="120">集群Id</th>
 				<th width="120">监控的key</th>
 				<th width="120">命中率</th>
 			</tr>
 		</thead>
-		<tbody>		
-			<tr target="sid_user" rel="6">
-				<td>testNS_testApp_hahaha</td>
-				<td>98%</td>
+		<tbody>
+		#foreach($stat in $stats)	
+			<tr target="sid_user" rel="${stat.keyStart}_${stat.clusterId}">
+				<td>${stat.clusterId}</td>
+				<td>${stat.keyStart}</td>
+				<td>${stat.hitRate}%</td>
 			</tr>
+		#end
 		</tbody>
 	</table>
 	<!--<div class="panelBar">
