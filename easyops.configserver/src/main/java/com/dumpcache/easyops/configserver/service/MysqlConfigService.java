@@ -64,7 +64,7 @@ public class MysqlConfigService extends AbstractConfigServiceImpl {
             if (getConfigFromRemote(namespace, app, key) == null) {
                 sql = "insert into kv_config(namespace,app,config_key,val,gmt_created,gmt_modified) values(?,?,?,?,?,?)";
             } else {
-                sql = "update kv_config set val=? where namespace=? and app=? and config_key=? and gmt_modified=?";
+                sql = "update kv_config set val=?,gmt_modified=? where namespace=?and app=? and config_key=?";
                 update = true;
             }
 
@@ -78,10 +78,10 @@ public class MysqlConfigService extends AbstractConfigServiceImpl {
                 pst.setTimestamp(6, new Timestamp(System.currentTimeMillis()));
             } else {
                 pst.setString(1, val);
-                pst.setString(2, namespace);
-                pst.setString(3, app);
-                pst.setString(4, key);
-                pst.setTimestamp(5, new Timestamp(System.currentTimeMillis()));
+                pst.setTimestamp(2, new Timestamp(System.currentTimeMillis()));
+                pst.setString(3, namespace);
+                pst.setString(4, app);
+                pst.setString(5, key);
             }
             pst.execute();
 

@@ -66,10 +66,16 @@ public interface ConfigManager {
         }
 
         public String getFormatGmtCreated() {
+            if (gmtCreated == null) {
+                return "";
+            }
             return sdf.format(gmtCreated);
         }
 
         public String getFormatGmtModified() {
+            if (gmtModified == null) {
+                return "";
+            }
             return sdf.format(gmtModified);
         }
 

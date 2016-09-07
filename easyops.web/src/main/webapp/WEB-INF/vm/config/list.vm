@@ -42,7 +42,7 @@
 		<ul class="toolBar">
 			<li><a class="add" href="config/list" target="navTab" rel="main"><span>刷新</span></a></li>
 			<li><a class="add" href="config/add" target="dialog" rel="main"><span>添加</span></a></li>
-			<li><a class="delete" href="config/delete?id={sid_user}" target="ajaxTodo" title="确定要删除吗?"><span>删除</span></a></li>
+			<!--<li><a class="delete" href="config/delete?id={sid_user}" target="ajaxTodo" title="确定要删除吗?"><span>删除</span></a></li>-->
 		</ul>
 	</div>
 	<table class="table" width="100%" layoutH="138">

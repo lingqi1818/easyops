@@ -56,11 +56,11 @@ public class ConfigController {
         try {
             configManager.saveConfig(namespace, app, key, val);
             model.addAttribute("statusCode", 200);
-            model.addAttribute("msg", "添加配置项成功！");
+            model.addAttribute("msg", "保存配置项成功！");
             return "error";
         } catch (Exception ex) {
             model.addAttribute("statusCode", 300);
-            model.addAttribute("msg", "添加配置项失败，系统内部错误！");
+            model.addAttribute("msg", "保存配置项失败，系统内部错误！");
             return "error";
         }
     }
