@@ -215,4 +215,17 @@ public class ZKConfigService extends AbstractConfigServiceImpl implements ZKClie
 
     }
 
+    @Override
+    public List<Config> searchConfigs(String namespace, String app, String key, int start,
+                                      int count) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public int searchConfigsCount(String namespace, String app, String key) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
 }

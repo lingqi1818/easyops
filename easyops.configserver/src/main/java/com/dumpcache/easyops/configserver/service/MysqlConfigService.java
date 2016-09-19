@@ -10,6 +10,7 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -392,6 +393,90 @@ public class MysqlConfigService extends AbstractConfigServiceImpl {
                 }
             }
         }
+    }
+
+    @Override
+    public List<Config> searchConfigs(String namespace, String app, String key, int start,
+                                      int count) {
+        Connection conn = null;
+        List<Config> clist = new ArrayList<Config>();
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement pst = null;
+            if (StringUtils.isEmpty(namespace) && StringUtils.isEmpty(app)) {
+                pst = conn.prepareStatement(
+                        "select id,namespace,app,config_key,val,gmt_created,gmt_modified from kv_config where config_key like ? order by id desc limit "
+                                + start + "," + count);
+                pst.setString(1, "%" + key + "%");
+            } else {
+                pst = conn.prepareStatement(
+                        "select id,namespace,app,config_key,val,gmt_created,gmt_modified from kv_config where namespace=? and app=? and config_key like ? order by id desc limit "
+                                + start + "," + count);
+                pst.setString(1, namespace);
+                pst.setString(2, app);
+                pst.setString(3, "%" + key + "%");
+            }
+            ResultSet result = pst.executeQuery();
+            if (result != null) {
+                while (result.next()) {
+                    Config c = new Config();
+                    c.setId(result.getInt(1));
+                    c.setNamespace(result.getString(2));
+                    c.setApp(result.getString(3));
+                    c.setKey(result.getString(4));
+                    c.setValue(result.getString(5));
+                    c.setGmtCreated(result.getTimestamp(6));
+                    c.setGmtModified(result.getTimestamp(7));
+                    clist.add(c);
+                }
+            }
+        } catch (Exception ex) {
+            LOGGER.error("get data from mysql error:", ex);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error("close connection error:", e);
+                }
+            }
+        }
+        return clist;
+    }
+
+    @Override
+    public int searchConfigsCount(String namespace, String app, String key) {
+        Connection conn = null;
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement pst = null;
+            if (StringUtils.isEmpty(namespace) && StringUtils.isEmpty(app)) {
+                pst = conn
+                        .prepareStatement("select count(*) from kv_config where config_key like ?");
+                pst.setString(1, "%" + key + "%");
+            } else {
+                pst = conn.prepareStatement(
+                        "select count(*) from kv_config where namespace=? and app=? and config_key like ?");
+                pst.setString(1, namespace);
+                pst.setString(2, app);
+                pst.setString(3, "%" + key + "%");
+            }
+            ResultSet result = pst.executeQuery();
+            if (result != null && result.next()) {
+                return result.getInt(1);
+            }
+        } catch (Exception ex) {
+            LOGGER.error("get data from mysql error:", ex);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error("close connection error:", e);
+                }
+            }
+        }
+        return 0;
     }
 
 }

@@ -29,6 +29,11 @@ public interface ConfigManager {
 
     public List<Config> listConfigs(String namespace, String app, int start, int count);
 
+    public List<Config> searchConfigs(String namespace, String app, String key, int start,
+                                      int count);
+
+    public int searchConfigsCount(String namespace, String app, String key);
+
     public int getConfigsCount(String namespace, String app);
 
     public List<String> getAllNamespaces();

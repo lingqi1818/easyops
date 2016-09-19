@@ -18,15 +18,30 @@ public class ConfigController {
     public String list(@RequestParam(value = "numPerPage", defaultValue = "20") int numPerPage,
                        @RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
                        @RequestParam(value = "namespace", defaultValue = "") String namespace,
-                       @RequestParam(value = "app", defaultValue = "") String app, Model model) {
+                       @RequestParam(value = "app", defaultValue = "") String app,
+                       @RequestParam(value = "s_key", defaultValue = "") String kw, Model model) {
         int start = (pageNum - 1) * numPerPage;
         if (StringUtils.isEmpty(namespace) && StringUtils.isEmpty(app)) {
-            model.addAttribute("configs", configManager.listAllConfigs(start, numPerPage));
-            model.addAttribute("totalCount", configManager.getAllConfigsCount());
+            if (StringUtils.isEmpty(kw)) {
+                model.addAttribute("configs", configManager.listAllConfigs(start, numPerPage));
+                model.addAttribute("totalCount", configManager.getAllConfigsCount());
+            } else {
+                model.addAttribute("configs",
+                        configManager.searchConfigs(namespace, app, kw, start, numPerPage));
+                model.addAttribute("totalCount",
+                        configManager.searchConfigsCount(namespace, app, kw));
+            }
         } else {
-            model.addAttribute("configs",
-                    configManager.listConfigs(namespace, app, start, numPerPage));
-            model.addAttribute("totalCount", configManager.getConfigsCount(namespace, app));
+            if (StringUtils.isEmpty(kw)) {
+                model.addAttribute("configs",
+                        configManager.listConfigs(namespace, app, start, numPerPage));
+                model.addAttribute("totalCount", configManager.getConfigsCount(namespace, app));
+            } else {
+                model.addAttribute("configs",
+                        configManager.searchConfigs(namespace, app, kw, start, numPerPage));
+                model.addAttribute("totalCount",
+                        configManager.searchConfigsCount(namespace, app, kw));
+            }
         }
         model.addAttribute("numPerPage", numPerPage);
         model.addAttribute("namespaces", configManager.getAllNamespaces());

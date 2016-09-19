@@ -3,15 +3,15 @@
 		<div class="pageFormContent" layoutH="56">
 			<p>
 				<label>namespace：</label>
-				<input name="namespace" class="required" type="text" size="30" value="" alt="$!{config.namespace}"/>
+				<input name="namespace" class="required" type="text" size="30" value="$!{config.namespace}" alt="$!{config.namespace}"/>
 			</p>
 			<p>
 				<label>app：</label>
-				<input name="app" class="required" type="text" size="30" value="" alt="$!{config.app}"/>
+				<input name="app" class="required" type="text" size="30" value="$!{config.app}" alt="$!{config.app}"/>
 			</p>
 			<p>
 				<label>key：</label>
-				<input name="kv_key" class="required" type="text" size="30" value="" alt="$!{config.key}"/>
+				<input name="kv_key" class="required" type="text" size="30" value="$!{config.key}" alt="$!{config.key}"/>
 			</p>
 			<p>
 				<label>添加value：</label>
