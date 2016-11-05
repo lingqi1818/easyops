@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-modules id="moduleCoreId" project-version="2.0">
+  <wb-module deploy-name="easyops.deploy">
+    <wb-resource deploy-path="/" source-path="bin"/>
+    <wb-resource deploy-path="/" source-path="conf"/>
+    <wb-resource deploy-path="/" source-path="webapp"/>
+  </wb-module>
+</project-modules>
