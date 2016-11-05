@@ -13,6 +13,7 @@
     <module>easyops.web</module>
     <module>easyops.common</module>
     <module>easyops.config</module>
+    <module>easyops.agent</module>
     <module>easyops.configserver</module>
     <module>easyops.deploy</module>
   </modules>
