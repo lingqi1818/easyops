@@ -174,6 +174,12 @@ public class RedisController {
         return "redis/cluster/keySearch";
     }
 
+    @RequestMapping("/redis/cluster/keyDelete")
+    public String keyDelete(@RequestParam(value = "clusterId") int clusterId, Model model) {
+        model.addAttribute("clusterId", clusterId);
+        return "redis/cluster/keyDelete";
+    }
+
     @RequestMapping("/redis/cluster/doKeySearch")
     public String doKeySearch(@RequestParam(value = "namespace") String namespace,
                               @RequestParam(value = "app") String appName,
@@ -187,6 +193,26 @@ public class RedisController {
             redisService.setAppName(appName);
             redisService.init();
             model.addAttribute("result", redisService.get(key));
+        } finally {
+            redisService.close();
+        }
+        return "redis/cluster/keySearchResult";
+    }
+
+    @RequestMapping("/redis/cluster/doKeyDelete")
+    public String doKeyDelete(@RequestParam(value = "namespace") String namespace,
+                              @RequestParam(value = "app") String appName,
+                              @RequestParam(value = "kv_key") String key,
+                              @RequestParam(value = "clusterId") int clusterId, Model model) {
+        ClusterRedisServiceImpl redisService = new ClusterRedisServiceImpl();
+        try {
+            redisService.setDataSource(dataSource);
+            redisService.setClusterId(clusterId);
+            redisService.setNamespace(namespace);
+            redisService.setAppName(appName);
+            redisService.init();
+            redisService.del(key);
+            model.addAttribute("result", "删除成功！！！");
         } finally {
             redisService.close();
         }

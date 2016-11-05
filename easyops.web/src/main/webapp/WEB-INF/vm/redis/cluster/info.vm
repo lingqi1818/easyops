@@ -5,6 +5,7 @@
 			<li><a class="edit" href="redis/cluster/migrate?clusterId=${clusterId}" target="dialog" rel="main"><span>数据迁移</span></a></li>
 			<li><a class="delete" href="redis/cluster/dismiss?clusterId=${clusterId}" target="dialog" rel="main"><span>遣散集群</span></a></li>
 			<li><a class="add" href="redis/cluster/keySearch?clusterId=${clusterId}" target="dialog" rel="main"><span>key查询</span></a></li>
+			<li><a class="add" href="redis/cluster/keyDelete?clusterId=${clusterId}" target="dialog" rel="main"><span>key删除</span></a></li>
 		</ul>
 	</div>
 <textarea id="redis_info" style="width:95%;height:500px">
