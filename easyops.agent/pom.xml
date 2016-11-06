@@ -19,13 +19,9 @@
   <version>${pom.version}</version>
 </dependency>
 <dependency>
-  <groupId>easyops.config</groupId>
-  <artifactId>easyops.config</artifactId>
-  <version>${pom.version}</version>
-</dependency>
-<dependency>
-	 <groupId>redis.clients</groupId>
-	 <artifactId>jedis</artifactId>
+	 <groupId>easyops.redis</groupId>
+	 <artifactId>easyops.redis</artifactId>
+	 <version>${pom.version}</version>
 </dependency>
 </dependencies>
   <build>

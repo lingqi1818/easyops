@@ -12,8 +12,8 @@ import org.slf4j.LoggerFactory;
 
 import com.dumpcache.easyops.agent.URLAnalysis;
 import com.dumpcache.easyops.agent.ip.IPTools;
-
-import redis.clients.jedis.Jedis;
+import com.dumpcache.easyops.redis.service.RedisService;
+import com.dumpcache.easyops.redis.service.RedisServiceImpl;
 
 /**
  * NGX日志收集器
@@ -25,7 +25,7 @@ public class NGXLogCollector implements LogCollector, Runnable {
     private final static Logger           LOGGER = LoggerFactory.getLogger(LogCollector.class);
     private final static SimpleDateFormat sdf    = new SimpleDateFormat("YYYY-MM-dd");
     private RandomAccessFile              accesslog;
-    private Jedis                         jedis;
+    private RedisService                  redisService;
 
     public NGXLogCollector(String path, String redis) {
         try {
@@ -34,29 +34,25 @@ public class NGXLogCollector implements LogCollector, Runnable {
             LOGGER.error("load ngx access log error:", e);
             return;
         }
-        String str[] = redis.split(":");
-        if (str == null || str.length != 2) {
-            LOGGER.error("redis server format is error:" + redis);
-            return;
-        }
-        jedis = new Jedis(str[0], Integer.valueOf(str[1]));
-    }
 
-    @Override
-    public void start() {
-        Thread t = new Thread(this);
-        t.setName("NGXLogCollector-Thread-" + Thread.currentThread().getId());
-        t.setDaemon(true);
-        t.start();
+        redisService = new RedisServiceImpl(redis);
     }
 
     public void run() {
         try {
             accesslog.seek(accesslog.length());
+            int i = 0;
             while (!Thread.currentThread().isInterrupted()) {
                 String line = accesslog.readLine();
                 if (line != null)
                     parseLineAndLog(line);
+                try {
+                    if (i++ % 100 == 0) {
+                        Thread.sleep(10);
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         } catch (IOException e) {
             LOGGER.error("read ngx access log error:" + e);
@@ -72,20 +68,20 @@ public class NGXLogCollector implements LogCollector, Runnable {
         }
         //秒pv
         String s_pv = "s_pv_" + strs[1].substring(10, 21);
-        jedis.incr(s_pv);
-        jedis.expire(s_pv, 60 * 60 * 24 + 60);
+        redisService.incr(s_pv);
+        redisService.expire(s_pv, 60 * 60 * 24 + 60);
         //日pv
         String d_pv = "d_pv_" + sdf.format(new Date());
-        jedis.incr(d_pv);
-        jedis.expire(s_pv, 60 * 60 * 24 * 180);
+        redisService.incr(d_pv);
+        redisService.expire(s_pv, 60 * 60 * 24 * 180);
         //城市秒pv
         String c_s_pv = city + "_s_pv_" + strs[1].substring(10, 21);
-        jedis.incr(c_s_pv);
-        jedis.expire(c_s_pv, 60 * 60 * 24 + 60);
+        redisService.incr(c_s_pv);
+        redisService.expire(c_s_pv, 60 * 60 * 24 + 60);
         //城市日pv
         String c_d_pv = city + "_d_pv_" + sdf.format(new Date());
-        jedis.incr(c_d_pv);
-        jedis.expire(c_d_pv, 60 * 60 * 24 * 180);
+        redisService.incr(c_d_pv);
+        redisService.expire(c_d_pv, 60 * 60 * 24 * 180);
         String url = strs[4];
         //分析下单数据
         if ("/zmw/v2/submit_order".equals(url)) {
@@ -95,22 +91,30 @@ public class NGXLogCollector implements LogCollector, Runnable {
             if (!StringUtils.isEmpty(price)) {
                 //日gmv
                 String gmv_pv = "gmv_" + sdf.format(new Date());
-                jedis.incrBy(gmv_pv, Integer.valueOf(price));
-                jedis.expire(gmv_pv, 60 * 60 * 24 + 60);
+                redisService.incrBy(gmv_pv, Integer.valueOf(price));
+                redisService.expire(gmv_pv, 60 * 60 * 24 + 60);
                 //城市日gmv
                 String c_gmv_pv = city + "_gmv_" + sdf.format(new Date());
-                jedis.incrBy(c_gmv_pv, Integer.valueOf(price));
-                jedis.expire(c_gmv_pv, 60 * 60 * 24 + 60);
+                redisService.incrBy(c_gmv_pv, Integer.valueOf(price));
+                redisService.expire(c_gmv_pv, 60 * 60 * 24 + 60);
                 //日下单
                 String order = "order_" + sdf.format(new Date());
-                jedis.incr(order);
-                jedis.expire(order, 60 * 60 * 24 + 60);
+                redisService.incr(order);
+                redisService.expire(order, 60 * 60 * 24 + 60);
                 //城市日下单
                 String c_order = city + "_order_" + sdf.format(new Date());
-                jedis.incr(c_order);
-                jedis.expire(c_order, 60 * 60 * 24 + 60);
+                redisService.incr(c_order);
+                redisService.expire(c_order, 60 * 60 * 24 + 60);
             }
         }
+    }
+
+    public void start() {
+        Thread t = new Thread(this);
+        t.setName("NGXLogCollector-Thread-" + new Date());
+        t.setDaemon(true);
+        t.start();
+
     }
 
     public static void main(String args[]) throws Exception {
