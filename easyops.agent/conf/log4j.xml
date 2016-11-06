@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration>
+	<appender name="APP-LOG-FILE" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="File" value="/home/sysops/logs/agent.log" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d - %c -%-4r [%t] %-5p %x - %m%n" />
+		</layout>
+	</appender>
+		
+	<logger name="app-log" additivity="false">
+		<level value="${app.log.level}" />
+		<appender-ref ref="APP-LOG-FILE" />
+	</logger>
+	
+	<root>
+		<priority value="${app.log.level}" />
+ 		<appender-ref ref="APP-LOG-FILE" />
+	</root>
+
+
+</log4j:configuration>  

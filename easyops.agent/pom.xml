@@ -23,6 +23,10 @@
   <artifactId>easyops.config</artifactId>
   <version>${pom.version}</version>
 </dependency>
+<dependency>
+	 <groupId>redis.clients</groupId>
+	 <artifactId>jedis</artifactId>
+</dependency>
 </dependencies>
   <build>
 	<resources>
@@ -31,6 +35,7 @@
         <includes>
           <include>**/*.xml</include>
           <include>**/*.properties</include>
+          <include>**/*.dat</include>
         </includes>
       </resource>
       <resource>
@@ -38,11 +43,36 @@
         <includes>
           <include>**/*.xml</include>
           <include>**/*.properties</include>
+          <include>**/*.dat</include>
         </includes>
       </resource>
     </resources>
 	<finalName>easyops.agent-${pom.version}</finalName>
-	<plugins>
-    </plugins>
+	<plugins> 
+	<plugin>  
+    <groupId>org.apache.maven.plugins</groupId>  
+    <artifactId>maven-dependency-plugin</artifactId>  
+    <executions>  
+    <execution>  
+    <id>copy</id>  
+    <phase>install</phase>  
+    <goals>  
+        <goal>copy-dependencies</goal>  
+    </goals>  
+    <configuration>  
+    <outputDirectory>${basedir}/target/lib</outputDirectory>
+    </configuration>  
+    </execution>  
+    </executions>  
+</plugin>  
+      <plugin> 
+        <artifactId>maven-compiler-plugin </artifactId> 
+        <configuration> 
+          <source>1.5 </source> 
+          <target>1.5 </target> 
+          <encoding>UTF-8</encoding>
+        </configuration> 
+      </plugin> 
+    </plugins> 
   </build>
 </project>
