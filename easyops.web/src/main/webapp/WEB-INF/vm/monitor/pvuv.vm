@@ -6,12 +6,25 @@
 <script src="http://cdn.hcharts.cn/highcharts/modules/data.js"></script>
 <script src="http://cdn.hcharts.cn/highcharts/modules/drilldown.js"></script>
 <!--<script src="../js/cn-all-sar-taiwan.js"></script>-->
-<div align="center"><h1>${city}${time}总PV：100</h1></div>
-<div align="center"><h1>${city}${time}总GMV：100</h1></div>
-<div align="center"><h1>${city}${time}下单总数：100</h1></div>
+<div align="center" id="city_info"></div>
 <div id="qps_total" style="min-width:400px;height:400px"></div>
 <div id="city_pk" style="min-width:400px;height:400px"></div>
 <script>
+
+
+	setInterval(function() {
+                        jQuery.ajax({
+                            url: "cityInfo?city=${city}",
+                            dataType: "json",
+                            type: "GET",
+                            success: function(data){
+                            var html="<h1>${time}-${city}-总PV："+data.pv+" 总GMV："+data.gmv+" 下单总数："+data.orderNum+"</h1>"
+                                $("#city_info").html(html);
+                            },
+                        });
+                    },
+                    1000);
+                    
 // 实时qps
 
 jQuery(document).ready(function() {
@@ -28,7 +41,19 @@ jQuery(document).ready(function() {
             marginRight: 10,
             events: {
                 load: function() {
-                    var series = this.series[0];   
+                    var series = this.series[0];
+                    setInterval(function() {
+                        jQuery.ajax({
+                            url: "qps?city=${city}",
+                            dataType: "json",
+                            type: "GET",
+                            success: function(data){
+                                // 新的加入
+                                series.addPoint([data['key'], data['data']], true, true);
+                            },
+                        });
+                    },
+                    1000);   
                 }
             }
         },
@@ -61,7 +86,7 @@ jQuery(document).ready(function() {
         },
         series: [{
             name: 'QPS',
-            data: [["23:25:26", 290], ["23:25:27", 228], ["23:25:28", 368], ["23:25:29", 314], ["23:25:30", 270], ["23:25:31", 247], ["23:25:32", 169], ["23:25:33", 158], ["23:25:34", 185], ["23:25:35", 157], ["23:25:36", 194], ["23:25:37", 121], ["23:25:38", 181], ["23:25:39", 163], ["23:25:40", 213], ["23:25:41", 172], ["23:25:42", 153], ["23:25:43", 222], ["23:25:44", 229], ["23:25:45", 224], ["23:25:46", 226], ["23:25:47", 191], ["23:25:48", 207], ["23:25:49", 192], ["23:25:50", 184], ["23:25:51", 154], ["23:25:52", 195], ["23:25:53", 201], ["23:25:54", 182], ["23:25:55", 207], ["23:25:56", 196], ["23:25:57", 208], ["23:25:58", 211], ["23:25:59", 199], ["23:26:00", 171], ["23:26:01", 160], ["23:26:02", 279], ["23:26:03", 195], ["23:26:04", 227], ["23:26:05", 207], ["23:26:06", 164], ["23:26:07", 160], ["23:26:08", 141], ["23:26:09", 196], ["23:26:10", 127], ["23:26:11", 182], ["23:26:12", 219], ["23:26:13", 186], ["23:26:14", 190], ["23:26:15", 145]]
+            data: [#foreach($t in $!times)["$t", $timesPV.get($t)]#if($velocityCount!=$times.size()),#end#end]
         }]
     });
 });

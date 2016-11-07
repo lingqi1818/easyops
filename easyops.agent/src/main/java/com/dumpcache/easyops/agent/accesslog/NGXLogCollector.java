@@ -26,8 +26,10 @@ public class NGXLogCollector implements LogCollector, Runnable {
     private final static SimpleDateFormat sdf    = new SimpleDateFormat("YYYY-MM-dd");
     private RandomAccessFile              accesslog;
     private RedisService                  redisService;
+    private int                           threadId;
 
-    public NGXLogCollector(String path, String redis) {
+    public NGXLogCollector(String path, String redis, int threadId) {
+        this.threadId = threadId;
         try {
             this.accesslog = new RandomAccessFile(path, "r");
         } catch (FileNotFoundException e) {
@@ -45,10 +47,15 @@ public class NGXLogCollector implements LogCollector, Runnable {
             while (!Thread.currentThread().isInterrupted()) {
                 String line = accesslog.readLine();
                 if (line != null)
+                    //redisService.lPush("ngx_access_log", line);
+                    try {
                     parseLineAndLog(line);
+                    } catch (Exception ex) {
+                    LOGGER.error("parseLineAndLog log error:" + ex);
+                    }
                 try {
-                    if (i++ % 100 == 0) {
-                        Thread.sleep(10);
+                    if (i++ % 200 == 0) {
+                        Thread.sleep(50);
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -67,7 +74,7 @@ public class NGXLogCollector implements LogCollector, Runnable {
             city = "UNKNOW";
         }
         //秒pv
-        String s_pv = "s_pv_" + strs[1].substring(10, 21);
+        String s_pv = "s_pv_" + strs[1].substring(13, 21);
         redisService.incr(s_pv);
         redisService.expire(s_pv, 60 * 60 * 24 + 60);
         //日pv
@@ -75,7 +82,7 @@ public class NGXLogCollector implements LogCollector, Runnable {
         redisService.incr(d_pv);
         redisService.expire(s_pv, 60 * 60 * 24 * 180);
         //城市秒pv
-        String c_s_pv = city + "_s_pv_" + strs[1].substring(10, 21);
+        String c_s_pv = city + "_s_pv_" + strs[1].substring(13, 21);
         redisService.incr(c_s_pv);
         redisService.expire(c_s_pv, 60 * 60 * 24 + 60);
         //城市日pv
@@ -84,10 +91,15 @@ public class NGXLogCollector implements LogCollector, Runnable {
         redisService.expire(c_d_pv, 60 * 60 * 24 * 180);
         String url = strs[4];
         //分析下单数据
-        if ("/zmw/v2/submit_order".equals(url)) {
+        if (url.startsWith("/zmw/v2/submit_order") || url.startsWith("/app-customer/order/submit")
+                || url.startsWith("/customer/order/submit")) {
             URLAnalysis urlAnalysis = new URLAnalysis();
             urlAnalysis.analysis(strs[9]);
-            String price = urlAnalysis.getParam("order_price");
+            String price = "0";
+            price = urlAnalysis.getParam("order_price");
+            if (StringUtils.isEmpty(price)) {
+                price = urlAnalysis.getParam("orderPrice");
+            }
             if (!StringUtils.isEmpty(price)) {
                 //日gmv
                 String gmv_pv = "gmv_" + sdf.format(new Date());
@@ -111,7 +123,7 @@ public class NGXLogCollector implements LogCollector, Runnable {
 
     public void start() {
         Thread t = new Thread(this);
-        t.setName("NGXLogCollector-Thread-" + new Date());
+        t.setName("NGXLogCollector-Thread-" + threadId);
         t.setDaemon(true);
         t.start();
 
@@ -122,7 +134,7 @@ public class NGXLogCollector implements LogCollector, Runnable {
         String[] strs = line.split(" ");
         System.out.println(strs[0]);
         System.out.println(strs[1].substring(1, 12));
-        System.out.println(strs[1].substring(10, 21));
+        System.out.println(strs[1].substring(13, 21));
         System.out.println(sdf.format(new Date()));
         System.out.println(strs[4]);
         System.out.println(strs[9]);
