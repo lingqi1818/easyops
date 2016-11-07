@@ -1,14 +1,16 @@
-<script src="http://cdn.hcharts.cn/jquery/jquery-1.8.3.min.js"></script>
-<script src="http://code.highcharts.com/4.2.2/highcharts.js" type="text/javascript"></script>
-<script src="http://code.highcharts.com/4.2.2/highcharts-3d.js" type="text/javascript"></script>
-<script src="http://cdn.hcharts.cn/highcharts/modules/exporting.js"></script>
-<script src="http://cdn.hcharts.cn/highmaps/highmaps.js"></script>
-<script src="http://cdn.hcharts.cn/highcharts/modules/data.js"></script>
-<script src="http://cdn.hcharts.cn/highcharts/modules/drilldown.js"></script>
-<!--<script src="../js/cn-all-sar-taiwan.js"></script>-->
+<script src="../js/hicharts/jquery-1.8.3.min.js"></script>
+<script src="../js/hicharts/highcharts.js" type="text/javascript"></script>
+<script src="../js/hicharts/highcharts-3d.js" type="text/javascript"></script>
+<script src="../js/hicharts/exporting.js"></script>
+<!--<script src="../js/hicharts/highmaps.js"></script>
+<script src="../js/hicharts/data.js"></script>
+<script src="../js/hicharts/drilldown.js"></script>
+<script src="../js/hicharts/cn-all-sar-taiwan.js"></script>-->
 <div align="center" id="city_info"></div>
 <div id="qps_total" style="min-width:400px;height:400px"></div>
-<div id="city_pk" style="min-width:400px;height:400px"></div>
+<div id="city_pk_pv" style="min-width:400px;height:400px"></div>
+<div id="city_pk_gmv" style="min-width:400px;height:400px"></div>
+<div id="city_pk_order" style="min-width:400px;height:400px"></div>
 <script>
 
 
@@ -18,7 +20,7 @@
                             dataType: "json",
                             type: "GET",
                             success: function(data){
-                            var html="<h1>${time}-${city}-总PV："+data.pv+" 总GMV："+data.gmv+" 下单总数："+data.orderNum+"</h1>"
+                            var html="<h1>${time}-${city}-总PV："+data.pv+"次 总GMV："+data.gmv+"元 下单总数："+data.orderNum+"单</h1>"
                                 $("#city_info").html(html);
                             },
                         });
@@ -93,15 +95,20 @@ jQuery(document).ready(function() {
 
 
 jQuery(function () {
-    jQuery('#city_pk').highcharts({
+    jQuery('#city_pk_pv').highcharts({
         chart: {
             type: 'bar'
         },
         title: {
-            text: '${time}城市数据PK'
+            text: '${time}城市PV数据PK'
         },
         xAxis: {
-            categories: ['北京', '杭州', '上海', '广州', '深圳'],
+            categories: [
+			#foreach($city in $!citys)
+			'${city}'
+			#if($velocityCount!=$citys.size()),#end
+			#end
+			],
             title: {
                 text: null
             }
@@ -109,7 +116,7 @@ jQuery(function () {
         yAxis: {
             min: 0,
             title: {
-                text: 'Population (millions)',
+                text: ' ',
                 align: 'high'
             },
             labels: {
@@ -117,7 +124,7 @@ jQuery(function () {
             }
         },
         tooltip: {
-            valueSuffix: ' millions'
+            valueSuffix: ''
         },
         plotOptions: {
             bar: {
@@ -142,17 +149,137 @@ jQuery(function () {
         },
         series: [{
             name: 'PV',
-            data: [133, 156, 947, 408, 6]
-        }, {
-            name: 'UV',
-            data: [133, 156, 947, 408, 6]
-        }, {
-            name: 'GMV',
-            data: [973, 914, 4054, 732, 34]
+            data: [#foreach($pv in $!pvs)
+			${pv}
+			#if($velocityCount!=$pvs.size()),#end
+			#end]
+        }]
+    });
+});
+
+jQuery(function () {
+    jQuery('#city_pk_gmv').highcharts({
+        chart: {
+            type: 'bar'
         },
+        title: {
+            text: '${time}城市GMV数据PK'
+        },
+        xAxis: {
+            categories: [
+			#foreach($city in $!citys)
+			'${city}'
+			#if($velocityCount!=$citys.size()),#end
+			#end
+			],
+            title: {
+                text: null
+            }
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: ' ',
+                align: 'high'
+            },
+            labels: {
+                overflow: 'justify'
+            }
+        },
+        tooltip: {
+            valueSuffix: ''
+        },
+        plotOptions: {
+            bar: {
+                dataLabels: {
+                    enabled: true
+                }
+            }
+        },
+        legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'top',
+            x: -40,
+            y: 100,
+            floating: true,
+            borderWidth: 1,
+            backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
+            shadow: true
+        },
+        credits: {
+            enabled: false
+        },
+        series: [{
+            name: 'GMV',
+            data: [#foreach($gmv in $!gmvs)
+			${gmv}
+			#if($velocityCount!=$gmvs.size()),#end
+			#end]
+        }]
+    });
+});
+
+jQuery(function () {
+    jQuery('#city_pk_order').highcharts({
+        chart: {
+            type: 'bar'
+        },
+        title: {
+            text: '${time}城市订单数据PK'
+        },
+        xAxis: {
+            categories: [
+			#foreach($city in $!citys)
+			'${city}'
+			#if($velocityCount!=$citys.size()),#end
+			#end
+			],
+            title: {
+                text: null
+            }
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: ' ',
+                align: 'high'
+            },
+            labels: {
+                overflow: 'justify'
+            }
+        },
+        tooltip: {
+            valueSuffix: ''
+        },
+        plotOptions: {
+            bar: {
+                dataLabels: {
+                    enabled: true
+                }
+            }
+        },
+        legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'top',
+            x: -40,
+            y: 100,
+            floating: true,
+            borderWidth: 1,
+            backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
+            shadow: true
+        },
+        credits: {
+            enabled: false
+        },
+        series: [
         {
             name: '订单量',
-            data: [973, 914, 4054, 732, 34]
+            data: [#foreach($order in $!orders)
+			${order}
+			#if($velocityCount!=$orders.size()),#end
+			#end]
         }]
     });
 });

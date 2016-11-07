@@ -132,7 +132,7 @@ $(function(){
 							</li>
 							<li><a href="#">监控服务</a>
 								<ul>
-									<li><a href="monitor/pvuv" target="navTab" rel="main">流量大盘</a></li>
+									<li><a href="monitor/pvuv?city=全国" target="navTab" rel="main">流量大盘</a></li>
 								</ul>
 							</li>					
 							<li><a href="#">发布管理</a>

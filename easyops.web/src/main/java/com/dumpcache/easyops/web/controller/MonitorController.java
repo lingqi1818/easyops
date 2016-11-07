@@ -41,6 +41,9 @@ public class MonitorController {
     @RequestMapping("/monitor/pvuv")
     public String pvuv(@RequestParam(value = "city") String city, Model model) {
         boolean isFound = false;
+        List<String> pvs = new ArrayList<String>();
+        List<String> gmvs = new ArrayList<String>();
+        List<String> orders = new ArrayList<String>();
 
         for (String c : citys) {
             if (c.equals(city)) {
@@ -67,10 +70,23 @@ public class MonitorController {
                 timesPV.put(t, d);
             }
         }
+        String key = sdf.format(new Date());
+        for (String c : citys) {
+            String c_d_pv = rs.get(c + "_d_pv_" + key);
+            pvs.add(c_d_pv);
+            String c_gmv_pv = rs.get(c + "_gmv_" + key);
+            gmvs.add(c_gmv_pv);
+            String c_order = rs.get(c + "_order_" + key);
+            orders.add(c_order);
+        }
         model.addAttribute("city", city);
         model.addAttribute("times", times);
         model.addAttribute("timesPV", timesPV);
         model.addAttribute("time", sdf.format(new Date()));
+        model.addAttribute("citys", citys);
+        model.addAttribute("pvs", pvs);
+        model.addAttribute("gmvs", gmvs);
+        model.addAttribute("orders", orders);
         return "monitor/pvuv";
     }
 
