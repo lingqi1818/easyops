@@ -1,8 +1,8 @@
 package com.dumpcache.easyops.agent.accesslog;
 
-import java.io.FileNotFoundException;
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.RandomAccessFile;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -24,15 +24,17 @@ import com.dumpcache.easyops.redis.service.RedisServiceImpl;
 public class NGXLogCollector implements LogCollector, Runnable {
     private final static Logger           LOGGER = LoggerFactory.getLogger(LogCollector.class);
     private final static SimpleDateFormat sdf    = new SimpleDateFormat("YYYY-MM-dd");
-    private RandomAccessFile              accesslog;
     private RedisService                  redisService;
     private int                           threadId;
+    private BufferedReader                br;
 
     public NGXLogCollector(String path, String redis, int threadId) {
         this.threadId = threadId;
         try {
-            this.accesslog = new RandomAccessFile(path, "r");
-        } catch (FileNotFoundException e) {
+            Process p = Runtime.getRuntime().exec("tail -n 1 -F " + path);
+            br = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            //this.accesslog = new RandomAccessFile(path, "r");
+        } catch (Exception e) {
             LOGGER.error("load ngx access log error:", e);
             return;
         }
@@ -42,27 +44,34 @@ public class NGXLogCollector implements LogCollector, Runnable {
 
     public void run() {
         try {
-            accesslog.seek(accesslog.length());
             int i = 0;
             while (!Thread.currentThread().isInterrupted()) {
-                String line = accesslog.readLine();
-                if (line != null)
+                String line = br.readLine();
+                if (line != null) {
                     //redisService.lPush("ngx_access_log", line);
                     try {
-                    parseLineAndLog(line);
+                        parseLineAndLog(line);
                     } catch (Exception ex) {
-                    LOGGER.error("parseLineAndLog log error:" + ex);
+                        LOGGER.error("parseLineAndLog log error:", ex);
                     }
-                try {
-                    if (i++ % 200 == 0) {
-                        Thread.sleep(50);
+                    try {
+                        if (i++ % 100 == 0) {
+                            Thread.sleep(100);
+                        }
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+
+                } else {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         } catch (IOException e) {
-            LOGGER.error("read ngx access log error:" + e);
+            LOGGER.error("read ngx access log error:", e);
         }
     }
 
@@ -101,13 +110,14 @@ public class NGXLogCollector implements LogCollector, Runnable {
                 price = urlAnalysis.getParam("orderPrice");
             }
             if (!StringUtils.isEmpty(price)) {
+                price = price.replaceAll("\"", "");
                 //日gmv
                 String gmv_pv = "gmv_" + sdf.format(new Date());
-                redisService.incrBy(gmv_pv, Integer.valueOf(price));
+                redisService.incrBy(gmv_pv, Double.valueOf(price).intValue());
                 redisService.expire(gmv_pv, 60 * 60 * 24 + 60);
                 //城市日gmv
                 String c_gmv_pv = city + "_gmv_" + sdf.format(new Date());
-                redisService.incrBy(c_gmv_pv, Integer.valueOf(price));
+                redisService.incrBy(c_gmv_pv, Double.valueOf(price).intValue());
                 redisService.expire(c_gmv_pv, 60 * 60 * 24 + 60);
                 //日下单
                 String order = "order_" + sdf.format(new Date());

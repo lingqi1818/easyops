@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -54,7 +55,7 @@ public class MonitorController {
         if (!isFound) {
             city = "全国";
         }
-        List<String> times = DateUtils.getSecondsByCurrent(120, 50, false);
+        List<String> times = DateUtils.getSecondsByCurrent(60, 50, false);
         Map<String, String> timesPV = new HashMap<String, String>();
         for (String t : times) {
 
@@ -73,11 +74,23 @@ public class MonitorController {
         String key = sdf.format(new Date());
         for (String c : citys) {
             String c_d_pv = rs.get(c + "_d_pv_" + key);
-            pvs.add(c_d_pv);
+            if (StringUtils.isEmpty(c_d_pv)) {
+                pvs.add("0");
+            } else {
+                pvs.add(c_d_pv);
+            }
             String c_gmv_pv = rs.get(c + "_gmv_" + key);
-            gmvs.add(c_gmv_pv);
+            if (StringUtils.isEmpty(c_gmv_pv)) {
+                gmvs.add("0");
+            } else {
+                gmvs.add(c_gmv_pv);
+            }
             String c_order = rs.get(c + "_order_" + key);
-            orders.add(c_order);
+            if (StringUtils.isEmpty(c_order)) {
+                orders.add("0");
+            } else {
+                orders.add(c_order);
+            }
         }
         model.addAttribute("city", city);
         model.addAttribute("times", times);
@@ -104,7 +117,7 @@ public class MonitorController {
             city = "全国";
         }
         Qps q = new Qps();
-        String key = DateUtils.sdf.format(new Date(new Date().getTime() - 70 * 1000));
+        String key = DateUtils.sdf.format(new Date(new Date().getTime() - 20 * 1000));
         q.setKey(key);
         if ("全国".equals(city)) {
             int v = 0;
