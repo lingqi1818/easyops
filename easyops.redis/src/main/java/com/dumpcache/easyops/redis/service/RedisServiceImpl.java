@@ -494,4 +494,20 @@ public class RedisServiceImpl implements RedisService {
         // TODO Auto-generated method stub    
     }
 
+    @Override
+    public List<String> mget(String... keys) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.get(0).getResource();
+            return jedis.mget(keys);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return null;
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+    }
+
 }

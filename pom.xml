@@ -10,6 +10,7 @@
   <name>easyops.all</name>
   <modules>
     <module>easyops.redis</module>
+    <module>easyops.java</module>
     <module>easyops.web</module>
     <module>easyops.common</module>
     <module>easyops.config</module>

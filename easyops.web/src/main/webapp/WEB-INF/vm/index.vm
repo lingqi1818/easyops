@@ -134,6 +134,9 @@ $(function(){
 								<ul>
 									<li><a href="monitor/pvuv?city=全国" target="_blank" rel="main">流量大盘</a></li>
 								</ul>
+								<ul>
+									<li><a href="monitor/snapshots?city=全国&day=2016-11-07" target="_blank" rel="main">历史镜像</a></li>
+								</ul>
 							</li>					
 							<li><a href="#">发布管理</a>
 								<ul>

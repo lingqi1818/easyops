@@ -23,7 +23,7 @@ import com.dumpcache.easyops.redis.service.RedisServiceImpl;
  */
 public class NGXLogCollector implements LogCollector, Runnable {
     private final static Logger           LOGGER = LoggerFactory.getLogger(LogCollector.class);
-    private final static SimpleDateFormat sdf    = new SimpleDateFormat("YYYY-MM-dd");
+    private final static SimpleDateFormat sdf    = new SimpleDateFormat("yyyy-MM-dd");
     private RedisService                  redisService;
     private int                           threadId;
     private BufferedReader                br;
@@ -82,20 +82,21 @@ public class NGXLogCollector implements LogCollector, Runnable {
         if (StringUtils.isEmpty(city)) {
             city = "UNKNOW";
         }
+        Date d = new Date();
         //秒pv
-        String s_pv = "s_pv_" + strs[1].substring(13, 21);
+        String s_pv = "s_pv_" + sdf.format(d) + "_" + strs[1].substring(13, 21);
         redisService.incr(s_pv);
-        redisService.expire(s_pv, 60 * 60 * 24 + 60);
+        redisService.expire(s_pv, 60 * 60 * 24 * 7);
         //日pv
-        String d_pv = "d_pv_" + sdf.format(new Date());
+        String d_pv = "d_pv_" + sdf.format(d);
         redisService.incr(d_pv);
-        redisService.expire(s_pv, 60 * 60 * 24 * 180);
+        redisService.expire(d_pv, 60 * 60 * 24 * 180);
         //城市秒pv
-        String c_s_pv = city + "_s_pv_" + strs[1].substring(13, 21);
+        String c_s_pv = city + "_s_pv_" + sdf.format(d) + "_" + strs[1].substring(13, 21);
         redisService.incr(c_s_pv);
-        redisService.expire(c_s_pv, 60 * 60 * 24 + 60);
+        redisService.expire(c_s_pv, 60 * 60 * 24 * 7);
         //城市日pv
-        String c_d_pv = city + "_d_pv_" + sdf.format(new Date());
+        String c_d_pv = city + "_d_pv_" + sdf.format(d);
         redisService.incr(c_d_pv);
         redisService.expire(c_d_pv, 60 * 60 * 24 * 180);
         String url = strs[4];
@@ -112,21 +113,21 @@ public class NGXLogCollector implements LogCollector, Runnable {
             if (!StringUtils.isEmpty(price)) {
                 price = price.replaceAll("\"", "");
                 //日gmv
-                String gmv_pv = "gmv_" + sdf.format(new Date());
+                String gmv_pv = "gmv_" + sdf.format(d);
                 redisService.incrBy(gmv_pv, Double.valueOf(price).intValue());
-                redisService.expire(gmv_pv, 60 * 60 * 24 + 60);
+                redisService.expire(gmv_pv, 60 * 60 * 24 * 180);
                 //城市日gmv
-                String c_gmv_pv = city + "_gmv_" + sdf.format(new Date());
+                String c_gmv_pv = city + "_gmv_" + sdf.format(d);
                 redisService.incrBy(c_gmv_pv, Double.valueOf(price).intValue());
-                redisService.expire(c_gmv_pv, 60 * 60 * 24 + 60);
+                redisService.expire(c_gmv_pv, 60 * 60 * 24 * 180);
                 //日下单
-                String order = "order_" + sdf.format(new Date());
+                String order = "order_" + sdf.format(d);
                 redisService.incr(order);
-                redisService.expire(order, 60 * 60 * 24 + 60);
+                redisService.expire(order, 60 * 60 * 24 * 180);
                 //城市日下单
-                String c_order = city + "_order_" + sdf.format(new Date());
+                String c_order = city + "_order_" + sdf.format(d);
                 redisService.incr(c_order);
-                redisService.expire(c_order, 60 * 60 * 24 + 60);
+                redisService.expire(c_order, 60 * 60 * 24 * 180);
             }
         }
     }

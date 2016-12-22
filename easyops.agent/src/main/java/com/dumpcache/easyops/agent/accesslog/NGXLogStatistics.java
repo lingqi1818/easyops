@@ -20,7 +20,8 @@ public class NGXLogStatistics implements LogStatistics, Runnable {
     //private final static Logger           LOGGER = LoggerFactory.getLogger(NGXLogStatistics.class);
     private int                           threadId;
     private RedisService                  redisService;
-    private final static SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd");
+    private final static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    
 
     public NGXLogStatistics(int threadId, String redis) {
         this.threadId = threadId;

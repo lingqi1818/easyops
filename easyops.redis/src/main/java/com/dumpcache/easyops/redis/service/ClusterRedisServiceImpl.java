@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Set;
 
 import javax.sql.DataSource;
@@ -442,6 +443,12 @@ public class ClusterRedisServiceImpl implements RedisService {
         } catch (IOException e) {
             LOGGER.error(e.getMessage(), e);
         }
+    }
+
+    @Override
+    public List<String> mget(String... keys) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

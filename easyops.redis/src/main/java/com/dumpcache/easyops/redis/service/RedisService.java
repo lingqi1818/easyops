@@ -1,5 +1,6 @@
 package com.dumpcache.easyops.redis.service;
 
+import java.util.List;
 import java.util.Set;
 
 import redis.clients.jedis.JedisPubSub;
@@ -13,6 +14,8 @@ import redis.clients.jedis.ScanResult;
  * @date 2015年11月3日 下午6:36:04
  */
 public interface RedisService {
+
+    public List<String> mget(String... keys);
 
     public void set(String key, String value);
 

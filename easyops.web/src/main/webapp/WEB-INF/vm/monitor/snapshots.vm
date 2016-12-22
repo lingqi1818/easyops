@@ -1,0 +1,260 @@
+<script src="../js/hicharts/jquery-1.8.3.min.js"></script>
+<script src="../js/hicharts/highcharts.js" type="text/javascript"></script>
+<script src="../js/hicharts/highcharts-3d.js" type="text/javascript"></script>
+<script src="../js/hicharts/exporting.js"></script>
+<!--<script src="../js/hicharts/highmaps.js"></script>
+<script src="../js/hicharts/data.js"></script>
+<script src="../js/hicharts/drilldown.js"></script>
+<script src="../js/hicharts/cn-all-sar-taiwan.js"></script>-->
+<div align="center" id="city_info"><h1>${time}-${city}-总PV：${cityInfo.pv}次 总GMV：${cityInfo.gmv}元 下单总数：${cityInfo.orderNum}单</h1></div>
+<div id="qps_total" style="min-width:400px;height:400px"></div>
+<div id="city_pk_pv" style="min-width:400px;height:400px"></div>
+<div id="city_pk_gmv" style="min-width:400px;height:400px"></div>
+<div id="city_pk_order" style="min-width:400px;height:400px"></div>
+<script>
+                    
+// 实时qps
+
+jQuery(document).ready(function() {
+    Highcharts.setOptions({
+        global: {
+            useUTC: false
+        }
+    });
+    var chart;
+    jQuery('#qps_total').highcharts({
+        chart: {
+            type: 'spline',
+            animation: Highcharts.svg,
+            marginRight: 10,
+            events: {
+                load: function() {
+                    var series = this.series[0];
+                }
+            }
+        },
+        title: {
+            text: '${city}${time}-QPS镜像'
+        },
+        xAxis: {
+            categories: [],
+        },
+        yAxis: {
+            title: {
+                text: 'QPS'
+            },
+            plotLines: [{
+                value: 0,
+                width: 1,
+                color: '#808080'
+            }]
+        },
+        tooltip: {
+            formatter: function() {
+                return '<b>' + this.series.name + '</b>' + ':'+ this.y;
+            }
+        },
+        legend: {
+            enabled: false
+        },
+        exporting: {
+            enabled: false
+        },
+        series: [{
+            name: 'QPS',
+            data: [#foreach($t in $!times)["$t", $timesPV.get($t)]#if($velocityCount!=$times.size()),#end#end]
+        }]
+    });
+});
+
+
+jQuery(function () {
+    jQuery('#city_pk_pv').highcharts({
+        chart: {
+            type: 'bar'
+        },
+        title: {
+            text: '${time}城市PV数据PK'
+        },
+        xAxis: {
+            categories: [
+			#foreach($city in $!citys)
+			'${city}'
+			#if($velocityCount!=$citys.size()),#end
+			#end
+			],
+            title: {
+                text: null
+            }
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: ' ',
+                align: 'high'
+            },
+            labels: {
+                overflow: 'justify'
+            }
+        },
+        tooltip: {
+            valueSuffix: ''
+        },
+        plotOptions: {
+            bar: {
+                dataLabels: {
+                    enabled: true
+                }
+            }
+        },
+        legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'top',
+            x: -40,
+            y: 100,
+            floating: true,
+            borderWidth: 1,
+            backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
+            shadow: true
+        },
+        credits: {
+            enabled: false
+        },
+        series: [{
+            name: 'PV',
+            data: [#foreach($pv in $!pvs)
+			${pv}
+			#if($velocityCount!=$pvs.size()),#end
+			#end]
+        }]
+    });
+});
+
+jQuery(function () {
+    jQuery('#city_pk_gmv').highcharts({
+        chart: {
+            type: 'bar'
+        },
+        title: {
+            text: '${time}城市GMV数据PK'
+        },
+        xAxis: {
+            categories: [
+			#foreach($city in $!citys)
+			'${city}'
+			#if($velocityCount!=$citys.size()),#end
+			#end
+			],
+            title: {
+                text: null
+            }
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: ' ',
+                align: 'high'
+            },
+            labels: {
+                overflow: 'justify'
+            }
+        },
+        tooltip: {
+            valueSuffix: ''
+        },
+        plotOptions: {
+            bar: {
+                dataLabels: {
+                    enabled: true
+                }
+            }
+        },
+        legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'top',
+            x: -40,
+            y: 100,
+            floating: true,
+            borderWidth: 1,
+            backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
+            shadow: true
+        },
+        credits: {
+            enabled: false
+        },
+        series: [{
+            name: 'GMV',
+            data: [#foreach($gmv in $!gmvs)
+			${gmv}
+			#if($velocityCount!=$gmvs.size()),#end
+			#end]
+        }]
+    });
+});
+
+jQuery(function () {
+    jQuery('#city_pk_order').highcharts({
+        chart: {
+            type: 'bar'
+        },
+        title: {
+            text: '${time}城市订单数据PK'
+        },
+        xAxis: {
+            categories: [
+			#foreach($city in $!citys)
+			'${city}'
+			#if($velocityCount!=$citys.size()),#end
+			#end
+			],
+            title: {
+                text: null
+            }
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: ' ',
+                align: 'high'
+            },
+            labels: {
+                overflow: 'justify'
+            }
+        },
+        tooltip: {
+            valueSuffix: ''
+        },
+        plotOptions: {
+            bar: {
+                dataLabels: {
+                    enabled: true
+                }
+            }
+        },
+        legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'top',
+            x: -40,
+            y: 100,
+            floating: true,
+            borderWidth: 1,
+            backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
+            shadow: true
+        },
+        credits: {
+            enabled: false
+        },
+        series: [
+        {
+            name: '订单量',
+            data: [#foreach($order in $!orders)
+			${order}
+			#if($velocityCount!=$orders.size()),#end
+			#end]
+        }]
+    });
+});
+</script>
