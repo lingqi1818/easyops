@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd"
+    default-autowire="byName">
+    
+    <bean id="testBean" class="com.dumpcache.easyops.java.test.TestBean" />
+    <bean id="testBean1" class="com.dumpcache.easyops.java.test.TestBean1" />
+
+    <!-- profiler截器 -->
+    <bean id="profilerInterceptor" class="com.dumpcache.easyops.java.ProfilerInterceptor" />
+    
+    <!-- 切面 -->
+    <bean id="profilerPointcut" class="org.springframework.aop.support.JdkRegexpMethodPointcut">
+        <property name="patterns">
+            <list>
+                <value>com.dumpcache.easyops.java.test..*</value>
+            </list>
+        </property>
+    </bean>
+    
+    <!-- aop -->
+    <aop:config>
+        <aop:advisor advice-ref="profilerInterceptor" pointcut-ref="profilerPointcut" />
+    </aop:config>
+</beans>

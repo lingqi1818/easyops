@@ -23,6 +23,10 @@
   <artifactId>easyops.config</artifactId>
   <version>${pom.version}</version>
 </dependency>
+<dependency>
+  <groupId>aopalliance</groupId>
+  <artifactId>aopalliance</artifactId>
+</dependency>
 </dependencies>
   <build>
 	<resources>

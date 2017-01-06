@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd"
+        default-autowire="byName">
+    <!-- 配置 bean -->
+    <bean id="testBean" class="com.dumpcache.easyops.java.test.TestBean" />
+    <bean id="testBean1" class="com.dumpcache.easyops.java.test.TestBean1" />
+    <!-- 配置切面的 bean. -->
+    <bean id="profilerInterceptor" class="com.dumpcache.easyops.java.ProfilerInterceptor" />
+    <!-- 配置 AOP -->
+    <aop:config expose-proxy="true">
+        <!-- 切点 -->
+        <aop:pointcut id="profilerPointcut" expression="execution(* com.dumpcache.easyops.java.test..*.*(..))" />
+        <!-- 切面 -->
+        <aop:advisor advice-ref="profilerInterceptor" pointcut-ref="profilerPointcut"/>
+    </aop:config>
+</beans>
